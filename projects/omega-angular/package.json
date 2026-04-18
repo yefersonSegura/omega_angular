@@ -2,7 +2,7 @@
   "name": "omega-angular",
   "version": "0.0.2",
   "description": "Omega architecture primitives for Angular (intents, channel, flows, agents) plus ESLint-first CLI builders and eslint-plugin-omega.",
-  "homepage": "https://github.com/yefersonSegura/omega_angular#readme",
+  "homepage": "https://yefersonSegura.github.io/omega_angular/",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/yefersonSegura/omega_angular.git"

@@ -2,6 +2,8 @@
 
 Monorepo for **Omega Angular** (`omega-angular`): an Angular/RxJS library for the **Omega** architecture — intents → `OmegaFlowManager` → flows ↔ agents over a shared `OmegaChannel`. Everything here is **Angular** (library, tooling, example app, schematics).
 
+**Documentation site:** [yefersonSegura.github.io/omega_angular](https://yefersonSegura.github.io/omega_angular/) (built from `docs/` with [VitePress](https://vitepress.dev/)). Edit the Markdown under `docs/`; **`npm run docs:dev`** to preview locally, **`npm run docs:build`** to build. After pushing to `main`, the **Deploy documentation** GitHub Action publishes to GitHub Pages (enable **Settings → Pages → GitHub Actions** once).
+
 ---
 
 ## Repository layout
@@ -15,6 +17,7 @@ Monorepo for **Omega Angular** (`omega-angular`): an Angular/RxJS library for th
 | `projects/omega-angular/schematics/` | **`ng add omega-angular`**, **`ng generate omega-angular:ecosystem`**, **`ng generate omega-angular:feature <name>`** (feature skeleton + merge into `omega-setup.ts` and routes). |
 | `projects/example/` | Demo app: mock login, `AuthFlow`, routing, `omega-setup.ts`. |
 | `projects/eslint-plugin-omega-angular/` | Source plugin used during development; the **published** copy lives inside `omega-angular`. |
+| `docs/` | Public **documentation site** (VitePress): guides, schematics overview, ESLint summary. |
 | `scripts/patch-omega-angular-package.mjs` | After `ng build omega-angular`, adds `exports` to `dist/omega-angular/package.json` for `./eslint-plugin/index.cjs` and `./eslint/config-omega.mjs`. |
 
 **Compatibility:** `omega-angular` declares peers for **Angular ≥ 14** and **RxJS ≥ 7.4**. The `example` app tracks the same Angular version as this repository.
@@ -147,6 +150,8 @@ npm install
 | `npm test` | Unit tests for the library (`ng test omega-angular --no-watch`). |
 | `npm run watch` | `ng build omega-angular --watch` in development mode. |
 | `npm run ecosystem` | `ng generate omega-angular:ecosystem --project=example` (run the ecosystem schematic on the demo app). |
+| `npm run docs:dev` | Local preview of the VitePress documentation site (`docs/`). |
+| `npm run docs:build` | Static build to `docs/.vitepress/dist` (same output CI deploys to GitHub Pages). |
 | `npm run publish:lib` | Build `dist/omega-angular` and run **`npm publish ./dist/omega-angular`** (not the private root package). Requires **`npm login`**; npm may require **2FA** (`npm publish ... --otp=CODE`). |
 
 ### Publishing the library

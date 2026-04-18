@@ -13,6 +13,7 @@ export default tseslint.config(
   ...tseslint.configs.recommended,
   {
     ignores: [
+      'docs/**',
       '**/node_modules/**',
       '**/dist/**',
       '**/.angular/**',

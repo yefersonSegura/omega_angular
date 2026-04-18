@@ -10,7 +10,10 @@
     "watch": "ng build omega-angular --watch --configuration development",
     "test": "ng test omega-angular --no-watch",
     "lint": "eslint .",
-    "ecosystem": "ng generate omega-angular:ecosystem --project=example"
+    "ecosystem": "ng generate omega-angular:ecosystem --project=example",
+    "docs:dev": "npm --prefix docs run dev",
+    "docs:build": "npm --prefix docs run build",
+    "docs:preview": "npm --prefix docs run preview"
   },
   "dependencies": {
     "@angular/common": "^21.2.0",

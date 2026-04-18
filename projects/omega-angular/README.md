@@ -6,7 +6,8 @@ The tarball also ships **ESLint-first CLI builders**, the **eslint-plugin** rule
 
 ## Documentation
 
-The **full guide** is the repository root **`README.md`** (install, `ng add`, ESLint, ecosystem, example app, and repo workflows).
+- **Web:** [Documentation site](https://yefersonSegura.github.io/omega_angular/) (guides and overview).
+- **Repository:** full monorepo details in the root **`README.md`** (install, `ng add`, ESLint, ecosystem, example app, workflows).
 
 ## Quick start (consumer project)
 
