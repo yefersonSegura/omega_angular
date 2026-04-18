@@ -1,16 +1,32 @@
 # Example application
 
-`projects/example` is the demo used in this repository:
+`projects/example` is the **reference implementation** in this monorepo. Use it to see how **`omega-setup.ts`**, flows, agents, behaviors, and the **router bridge** fit together.
 
-- **Login** mock (`demo` / `demo`) via `AuthFlow` and `AuthApi`.
-- **Home** with session data from a resolver (no storage reads inside the component).
-- **Sample features** (cliente, pedidos, factura, …) generated with `ng generate omega-angular:feature` to show the list-page + flow + agent pattern.
+## What it demonstrates
 
-Run locally from the repo root:
+| Area | Location / notes |
+| ---- | ---------------- |
+| **Bootstrap** | `src/app/omega-setup.ts` — `createFlows`, `createAgents`, `bootstrap` (`switchTo('auth')`), `provideOmegaNavigationBridge`. |
+| **Auth** | `auth/omega/` — `AuthFlow`, behaviors, `createAuthAgent`, wire constants; **`authGuard`**, **`homePageResolver`**. |
+| **Navigation** | Subscribes to **`NAVIGATOR_EVENT`** and calls **`Router.navigateByUrl`**. |
+| **Other features** | cliente, pedidos, factura — list-style examples from `ng generate omega-angular:feature`. |
+
+## Commands
+
+From the **repository root**:
 
 ```bash
 npm install
 npm run start
 ```
 
-This uses the same **eslint-then** contract as a consumer app after `ng add omega-angular`.
+- **`npm run start`** — `ng serve example` (dev server).  
+- **`npm run build`** — production build of the example app.  
+
+This matches the **eslint-then** pipeline you get after **`ng add omega-angular`** in a fresh project.
+
+## Related docs
+
+- [Application bootstrap](./omega-setup)  
+- [Data flow](./data-flow)  
+- [Repository layout](./repository)  

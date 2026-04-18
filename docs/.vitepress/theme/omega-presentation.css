@@ -28,6 +28,9 @@
   --vp-c-bg-soft: #ebebef;
   --vp-c-gutter: rgba(0, 210, 255, 0.12);
 
+  /* Must match nav strip — default ties this to --vp-c-bg and causes a seam next to the logo */
+  --vp-nav-bg-color: var(--vp-c-bg-alt);
+
   /* Home hero — same gradient family as presentation .top-nav-logo / .reading-progress */
   --vp-home-hero-name-color: transparent;
   --vp-home-hero-name-background: linear-gradient(
@@ -55,28 +58,41 @@
   --vp-c-bg-elv: #18181f;
   --vp-c-bg-soft: #1e1e28;
   --vp-c-gutter: rgba(0, 210, 255, 0.18);
+
+  --vp-nav-bg-color: var(--vp-c-bg-alt);
 }
 
-/* Nav bar: subtle brand strip like presentation .top-nav */
+/*
+ * Nav bar: one full-width surface (see VPNavBar.vue — .title is transparent on desktop
+ * while .content-body gets --vp-nav-bg-color, which defaults to --vp-c-bg and clashes
+ * with the header layer). Gradient is subtle and spans the whole header.
+ */
 .VPNav {
   background: linear-gradient(
       90deg,
-      rgba(157, 80, 187, 0.14),
-      rgba(110, 72, 170, 0.1),
-      rgba(0, 210, 255, 0.08)
+      rgba(157, 80, 187, 0.1),
+      rgba(110, 72, 170, 0.07),
+      rgba(0, 210, 255, 0.06)
     ),
     var(--vp-c-bg-alt) !important;
-  border-bottom: 1px solid rgba(0, 210, 255, 0.16);
+  border-bottom: 1px solid rgba(0, 210, 255, 0.14);
 }
 
 .dark .VPNav {
   background: linear-gradient(
       90deg,
-      rgba(157, 80, 187, 0.22),
-      rgba(110, 72, 170, 0.14),
-      rgba(0, 210, 255, 0.1)
+      rgba(157, 80, 187, 0.12),
+      rgba(110, 72, 170, 0.08),
+      rgba(0, 210, 255, 0.06)
     ),
     var(--vp-c-bg-alt) !important;
+}
+
+@media (min-width: 960px) {
+  /* Let search + links sit on the same layer as the logo (no darker “plate”) */
+  .VPNavBar .content-body {
+    background-color: transparent !important;
+  }
 }
 
 /* Selection tint — presentation uses purple / cyan in light */

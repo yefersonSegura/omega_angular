@@ -22,7 +22,13 @@ ng add omega-angular
 - Define **flows** (`OmegaFlow`) and **agents** (`OmegaAgent`) for your domain.
 - Send **intents** with `OmegaFlowManager.handleIntent` and **events** via `OmegaChannel`.
 
-See [Core concepts](./concepts) for the mental model.
+## Learn the runtime
+
+1. [Core concepts](./concepts) — glossary and diagram  
+2. [Data flow](./data-flow) — intents → flows → channel → agents  
+3. [Channel & events](./channel-events), [Intents & flows](./intents-flows-manager), [Agents](./agents-behaviors)  
+4. [Navigation & Router](./navigation-router) — bridge pattern with `Router`  
+5. [API reference](./api-reference) — package exports  
 
 ## Repository layout (example)
 

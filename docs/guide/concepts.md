@@ -1,21 +1,57 @@
 # Core concepts
 
-## OmegaChannel
+omega-angular maps the **Omega** mental model to Angular: a shared **channel** for **`OmegaEvent`**, **`OmegaIntent`** objects for user/system requests, **flows** for feature orchestration, **agents** for reactions and IO, and a **flow manager** that ties routing of intents to whichever flows are active.
 
-A shared **broadcast** stream of `OmegaEvent` instances. Flows and UI subscribe; agents emit results. Use **namespaces** to scope events per feature when useful.
+## Glossary
 
-## Intents
+| Term | Meaning |
+| ---- | ------- |
+| **Channel** | Broadcast bus (`OmegaChannel`) — no replay; everyone subscribed sees each emission. |
+| **Intent** | Request object (`OmegaIntent`) with a **name** and optional **payload** — handled by active flows. |
+| **Flow** | `OmegaFlow` subclass: implements **`onIntent`** and optionally **`onEvent`** for one feature id. |
+| **Active flow** | Registered on `OmegaFlowManager`; receives intents and forwarded channel events. |
+| **Agent** | Listens to **all** channel events and runs **behavior** rules → **reactions** (your code does HTTP/storage). |
+| **Namespace** | Optional tag on events (`OmegaChannelNamespace`) to partition traffic on the same channel. |
+| **Wire name** | Stable string for event/intent names (constants or enums + helpers). |
 
-`OmegaIntent` describes **what the user or system wants** (e.g. login). The **flow manager** delivers intents to active flows.
+## How the pieces relate
 
-## Flows (`OmegaFlow`)
+```mermaid
+flowchart LR
+  UI[Components / templates]
+  Mgr[OmegaFlowManager]
+  Flow[OmegaFlow instances]
+  Ch[OmegaChannel]
+  Ag[OmegaAgent]
 
-A flow implements `onIntent` and optionally `onEvent`. It **orchestrates** the feature: validates input, emits channel events, and can trigger navigation (e.g. via a `navigator` bridge to the Angular `Router`).
+  UI -->|handleIntent| Mgr
+  Mgr -->|onIntent| Flow
+  Flow -->|emit events| Ch
+  Ch -->|events| Mgr
+  Mgr -->|onEvent| Flow
+  Ch -->|events| Ag
+  Ag -->|emit results| Ch
+```
 
-## Agents (`OmegaAgent`)
+- **Intents** enter through **`handleIntent`** only (not automatically from Router).
+- **Events** are **broadcast**: flows **and** agents both observe; the manager also forwards events to active flows’ **`onEvent`**.
 
-Agents attach **behaviors** that turn channel events into **reactions** (call API, write session, etc.). Keep **HTTP and storage** in agents / services, not in `omega/` orchestration files — this matches the bundled ESLint rules.
+## Layering rules (recommended)
 
-## Flow manager
+1. **Views** — trigger intents or subscribe to state; avoid embedding HTTP when ESLint rules are enabled.
+2. **Flows** (`**/omega/*.flow.ts`) — validation, orchestration, channel emissions.
+3. **Agents + services** — side effects: REST, storage, analytics.
+4. **`omega-setup.ts`** — composition: `provideOmega`, router bridges, guards.
 
-`OmegaFlowManager` tracks which flows are **active** and dispatches intents and channel traffic. Use `activate`, `switchTo`, etc., according to your routing strategy.
+Consistency with the Flutter **omega_architecture** package is conceptual (channel, intents, flows, agents); API names may differ — see the **[Flutter documentation](https://pub.dev/packages/omega_architecture)** for parity on other stacks.
+
+## Where to read next
+
+| Topic | Guide |
+| ----- | ----- |
+| End-to-end sequence | [Data flow](./data-flow) |
+| Channel API | [Channel & events](./channel-events) |
+| Intents & manager | [Intents, flows & manager](./intents-flows-manager) |
+| Agents | [Agents & behaviors](./agents-behaviors) |
+| Router integration | [Navigation & Router](./navigation-router) |
+| Exports cheat sheet | [API reference](./api-reference) |

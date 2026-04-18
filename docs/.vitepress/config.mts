@@ -23,7 +23,18 @@ export default defineConfig({
         items: [
           { text: 'Getting started', link: '/guide/getting-started' },
           { text: 'Core concepts', link: '/guide/concepts' },
+          { text: 'Data flow', link: '/guide/data-flow' },
           { text: 'omega-setup.ts', link: '/guide/omega-setup' },
+        ],
+      },
+      {
+        text: 'Core library',
+        items: [
+          { text: 'Channel & events', link: '/guide/channel-events' },
+          { text: 'Intents, flows & manager', link: '/guide/intents-flows-manager' },
+          { text: 'Agents & behaviors', link: '/guide/agents-behaviors' },
+          { text: 'Navigation & Router', link: '/guide/navigation-router' },
+          { text: 'API reference', link: '/guide/api-reference' },
         ],
       },
       {

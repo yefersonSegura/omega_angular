@@ -26,3 +26,9 @@ Each feature typically exposes:
 - Registration in `createFlows` / `createAgents` inside `omega-setup.ts` (or use **`ng generate omega-angular:feature`** to merge automatically).
 
 Keep HTTP and side effects in **services** and **agents**, not in dumb view components — aligned with the bundled ESLint rules.
+
+## Related guides
+
+- [Data flow](./data-flow) — how bootstrap fits in the lifecycle  
+- [Navigation & Router](./navigation-router) — **`provideOmegaNavigationBridge`** pattern  
+- [Example app](./example-app) — full `omega-setup.ts` in `projects/example`  
