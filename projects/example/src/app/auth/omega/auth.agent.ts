@@ -5,8 +5,9 @@ import { OmegaAgent, OmegaAgentReaction, OmegaChannel } from 'omega-angular';
 import type { AuthApi } from '../services/auth.api';
 import type { AuthRemoteLoginPayload, AuthSessionSnapshotPayload } from '../models/auth.models';
 import { AuthLoginBehavior, AuthLogoutBehavior, AuthSessionBehavior } from './auth.behavior';
-import { AUTH_SESSION_KEY, AuthAgentAction, AuthWire } from './auth.constants';
+import { AuthAgentAction, AuthWire } from './auth.constants';
 import { AuthSession } from './auth.session';
+import { writeAuthSessionSnapshotJson } from './auth.storage';
 
 function runRemoteLogin(channel: OmegaChannel, authApi: AuthApi, credentials: AuthRemoteLoginPayload): void {
   void firstValueFrom(authApi.login(credentials)).then((result) => {
@@ -19,7 +20,7 @@ function runRemoteLogin(channel: OmegaChannel, authApi: AuthApi, credentials: Au
 }
 
 function runSaveSession(snapshot: AuthSessionSnapshotPayload): void {
-  sessionStorage.setItem(AUTH_SESSION_KEY, JSON.stringify(snapshot));
+  writeAuthSessionSnapshotJson(JSON.stringify(snapshot));
 }
 
 function createAuthAgentReactionHandler(

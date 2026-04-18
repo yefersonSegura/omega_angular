@@ -1,4 +1,4 @@
-/** Clave del snapshot de sesión tras éxito de login (persistencia demo del agente). */
+/** Clave en `localStorage` del snapshot tras login OK (persistencia demo del agente). */
 export const AUTH_SESSION_KEY = 'omega.auth';
 
 /** Lo emite {@link AuthFlow} tras login OK; el bridge en `omega-setup` llama al `Router`. */

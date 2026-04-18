@@ -1,8 +1,8 @@
 {
   "name": "omega-angular",
-  "version": "0.0.2",
+  "version": "0.0.8",
   "description": "Omega architecture primitives for Angular (intents, channel, flows, agents) plus ESLint-first CLI builders and eslint-plugin-omega.",
-  "homepage": "https://yefersonSegura.github.io/omega_angular/",
+  "homepage": "https://yefersonsegura.github.io/omega_angular/",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/yefersonSegura/omega_angular.git"
@@ -23,19 +23,11 @@
     "rxjs": ">=7.4.0",
     "typescript-eslint": ">=8.0.0"
   },
-  "peerDependenciesMeta": {
-    "@eslint/js": {
-      "optional": true
-    },
-    "eslint": {
-      "optional": true
-    },
-    "typescript-eslint": {
-      "optional": true
-    }
-  },
   "dependencies": {
-    "tslib": "^2.3.0"
+    "@eslint/js": "^9.21.0",
+    "eslint": "^9.21.0",
+    "tslib": "^2.3.0",
+    "typescript-eslint": "^8.24.0"
   },
   "sideEffects": false
 }

@@ -1,0 +1,39 @@
+{
+  "$schema": "http://json-schema.org/schema",
+  "$id": "omega-angular-remove",
+  "title": "Remove omega-angular integration",
+  "description": "Reverts eslint-then targets in angular.json, trims ESLint flat config, removes omegaSetupProviders from app.config. Optionally deletes app/omega-setup.ts. Run `npm uninstall omega-angular` afterward.",
+  "type": "object",
+  "properties": {
+    "project": {
+      "type": "string",
+      "description": "Application project name (default: first application in angular.json)."
+    },
+    "skipAngular": {
+      "type": "boolean",
+      "default": false,
+      "description": "Do not modify angular.json."
+    },
+    "skipEslint": {
+      "type": "boolean",
+      "default": false,
+      "description": "Do not modify eslint.config.mjs."
+    },
+    "skipAppConfig": {
+      "type": "boolean",
+      "default": false,
+      "description": "Do not strip omegaSetupProviders from app.config.ts."
+    },
+    "removeEslintDevDependencies": {
+      "type": "boolean",
+      "default": false,
+      "description": "Remove eslint, @eslint/js, typescript-eslint from package.json devDependencies (only if present)."
+    },
+    "deleteOmegaSetup": {
+      "type": "boolean",
+      "default": false,
+      "description": "Delete `{sourceRoot}/app/omega-setup.ts` after stripping providers from app.config (use when you no longer need Omega runtime wiring)."
+    }
+  },
+  "additionalProperties": false
+}

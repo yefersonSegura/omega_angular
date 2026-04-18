@@ -7,7 +7,7 @@ export interface OmegaAgentReaction {
     readonly payload?: unknown;
 }
 export type OmegaAgentReactionHandler = (reaction: OmegaAgentReaction) => void;
-/** Rule engine hook: first non-null reaction wins for this event tick. */
+/** Rule engine hook: each behavior is evaluated; every non-null reaction runs `onReaction` in order. */
 export declare abstract class OmegaAgentBehaviorEngine {
     abstract evaluate(ctx: OmegaAgentBehaviorContext): OmegaAgentReaction | null;
 }

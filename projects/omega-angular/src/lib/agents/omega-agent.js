@@ -16,7 +16,6 @@ export class OmegaAgent {
             const reaction = behavior.evaluate(ctx);
             if (reaction) {
                 this.onReaction(reaction);
-                return;
             }
         }
     }

@@ -30,6 +30,17 @@ ng generate omega-angular:ecosystem --project=myApp --force
 
 By default this also adds the **login + home** starter (auth folder, `home-page`, routes). Use **`--minimal`** for the previous “empty flows only” bootstrap.
 
+**Revert `ng add` (builders, ESLint flat config, `app.config` providers):**
+
+```bash
+ng generate omega-angular:remove
+ng generate omega-angular:remove --project=myApp --remove-eslint-dev-dependencies
+ng generate omega-angular:remove --delete-omega-setup
+npm uninstall omega-angular
+```
+
+This restores `build` / `serve` in `angular.json` from the inner targets (`app-build` / `app-serve`), replaces `eslint.config.mjs` with a minimal config that does not import `omega-angular`, and strips `omegaSetupProviders` from `app.config.ts`. With **`--delete-omega-setup`**, it also deletes `src/app/omega-setup.ts` (after updating `app.config.ts`). Other Omega feature folders remain; remove them manually if unused.
+
 **Feature schematic (flow + agent + page):**
 
 ```bash

@@ -137,7 +137,7 @@ const APP_ROUTES_STARTER = `import { Routes } from '@angular/router';
 import { authGuard, homePageResolver } from './omega-setup';
 
 export const routes: Routes = [
-  { path: '', pathMatch: 'full', redirectTo: 'login' },
+  { path: '', pathMatch: 'full', redirectTo: 'home' },
   {
     path: 'login',
     loadComponent: () =>
@@ -150,9 +150,156 @@ export const routes: Routes = [
     canActivate: [authGuard],
     resolve: { home: homePageResolver },
   },
-  { path: '**', redirectTo: 'login' },
+  { path: '**', redirectTo: 'home' },
 ];
 `;
+
+/**
+ * Root shell: Angular 17+ suele usar `app.html`; versiones anteriores `app.component.html`.
+ * {@link resolveRootTemplatePath} localiza el archivo real vía `templateUrl`.
+ */
+const ROOT_SHELL_HTML = `<header class="bar">
+  <span class="brand">Omega Angular</span>
+  <span class="tag">welcome developer</span>
+</header>
+<main class="main">
+  <router-outlet />
+</main>
+`;
+
+const ROOT_SHELL_CSS = `:host {
+  display: flex;
+  min-height: 100vh;
+  flex-direction: column;
+  background: #f1f5f9;
+  color: #0f172a;
+}
+
+.bar {
+  display: flex;
+  align-items: baseline;
+  gap: 0.75rem;
+  padding: 0.75rem 1.25rem;
+  border-bottom: 1px solid #e2e8f0;
+  background: #fff;
+}
+
+.brand {
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.tag {
+  font-size: 0.8rem;
+  color: #64748b;
+}
+
+.main {
+  flex: 1;
+}
+`;
+
+/**
+ * @param {import('@angular-devkit/schematics').Tree} tree
+ * @param {string} appDir
+ * @returns {string | null} virtual path with leading slash
+ */
+function resolveRootTemplatePath(tree, appDir) {
+  const base = `/${appDir}`.replace(/\/+/g, "/");
+  const direct = [`${base}/app.html`, `${base}/app.component.html`];
+  for (const p of direct) {
+    if (tree.exists(p)) {
+      return p;
+    }
+  }
+  const sources = [`${base}/app.ts`, `${base}/app.component.ts`];
+  for (const src of sources) {
+    if (!tree.exists(src)) {
+      continue;
+    }
+    const content = tree.read(src).toString("utf-8");
+    const m = content.match(/templateUrl:\s*['"](\.\/[^'"]+)['"]/);
+    if (m) {
+      const rel = m[1].replace(/^\.\//, "");
+      const resolved = `${base}/${rel}`.replace(/\/+/g, "/");
+      if (tree.exists(resolved)) {
+        return resolved;
+      }
+    }
+  }
+  return null;
+}
+
+/**
+ * @param {import('@angular-devkit/schematics').Tree} tree
+ * @param {string} appDir
+ * @returns {string | null}
+ */
+function resolveRootStylesPath(tree, appDir) {
+  const base = `/${appDir}`.replace(/\/+/g, "/");
+  for (const name of ["app.css", "app.component.css"]) {
+    const p = `${base}/${name}`;
+    if (tree.exists(p)) {
+      return p;
+    }
+  }
+  const sources = [`${base}/app.ts`, `${base}/app.component.ts`];
+  for (const src of sources) {
+    if (!tree.exists(src)) {
+      continue;
+    }
+    const content = tree.read(src).toString("utf-8");
+    const m =
+      content.match(/styleUrl:\s*['"](\.\/[^'"]+)['"]/) ||
+      content.match(/styleUrls:\s*\[\s*['"](\.\/[^'"]+)['"]\s*\]/);
+    if (m) {
+      const rel = m[1].replace(/^\.\//, "");
+      const resolved = `${base}/${rel}`.replace(/\/+/g, "/");
+      if (tree.exists(resolved)) {
+        return resolved;
+      }
+    }
+  }
+  return null;
+}
+
+/**
+ * @param {import('@angular-devkit/schematics').Tree} tree
+ * @param {string} appDir
+ * @param {import('@angular-devkit/schematics').TypedSchematicContext} context
+ */
+function applyRootShellLayout(tree, appDir, context) {
+  const tplPath = resolveRootTemplatePath(tree, appDir);
+  if (tplPath) {
+    tree.overwrite(tplPath, ROOT_SHELL_HTML);
+    context.logger.info(`omega-angular: applied root shell template ${tplPath.replace(/^\//, "")}`);
+  } else {
+    context.logger.warn(
+      "omega-angular: no root template (app.html / app.component.html or templateUrl) — add header + <router-outlet /> manually.",
+    );
+  }
+
+  const cssPath = resolveRootStylesPath(tree, appDir);
+  if (!cssPath) {
+    context.logger.warn(
+      "omega-angular: no root styles file (app.css / styleUrl) — add shell styles manually if needed.",
+    );
+    return;
+  }
+
+  const before = tree.read(cssPath).toString("utf-8");
+  if (before.includes(".bar") && before.includes(".main")) {
+    context.logger.info(`omega-angular: root styles already include shell — ${cssPath.replace(/^\//, "")} unchanged.`);
+    return;
+  }
+
+  const merged =
+    before.trim().length === 0
+      ? ROOT_SHELL_CSS + "\n"
+      : `${before.trimEnd()}\n\n/* omega-angular ecosystem: root shell */\n${ROOT_SHELL_CSS}\n`;
+  tree.overwrite(cssPath, merged);
+  context.logger.info(`omega-angular: merged root shell styles into ${cssPath.replace(/^\//, "")}`);
+}
 
 /**
  * Relative paths under `src/app/` → file body.
@@ -658,6 +805,7 @@ function applyStarterShell(tree, appDir, context) {
       context.logger.info(`omega-angular: created starter ${p.replace(/^\//, "")}`);
     }
   }
+  applyRootShellLayout(tree, appDir, context);
 }
 
 /**

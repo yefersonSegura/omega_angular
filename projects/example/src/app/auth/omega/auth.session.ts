@@ -1,17 +1,17 @@
-import { AUTH_SESSION_KEY } from './auth.constants';
+import { readAuthSessionRaw, clearAuthSessionSnapshot } from './auth.storage';
 
 /**
- * Lectura síncrona del snapshot guardado por el agente (p. ej. guard).
+ * Lectura síncrona del snapshot guardado por el agente en `localStorage` (p. ej. guard).
  * Para reacciones reactivas en UI, preferir `inject(OmegaChannel)` y escuchar eventos.
  */
 export const AuthSession = {
   isAuthed(): boolean {
-    return !!sessionStorage.getItem(AUTH_SESSION_KEY);
+    return !!readAuthSessionRaw();
   },
 
   displayName(): string {
     try {
-      const raw = sessionStorage.getItem(AUTH_SESSION_KEY);
+      const raw = readAuthSessionRaw();
       if (!raw) {
         return 'guest';
       }
@@ -23,6 +23,6 @@ export const AuthSession = {
   },
 
   clear(): void {
-    sessionStorage.removeItem(AUTH_SESSION_KEY);
+    clearAuthSessionSnapshot();
   },
 } as const;

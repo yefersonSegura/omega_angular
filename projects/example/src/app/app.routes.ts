@@ -3,7 +3,8 @@ import { Routes } from '@angular/router';
 import { authGuard, homePageResolver } from './omega-setup';
 
 export const routes: Routes = [
-  { path: '', pathMatch: 'full', redirectTo: 'login' },
+  /** Base: va a `home`; si no hay sesión, `authGuard` manda a `/login`. */
+  { path: '', pathMatch: 'full', redirectTo: 'home' },
   {
     path: 'login',
     loadComponent: () =>
@@ -34,5 +35,6 @@ export const routes: Routes = [
 
 
 
-  { path: '**', redirectTo: 'login' },
+  /** Rutas desconocidas: mismo criterio que la base (home + guard). */
+  { path: '**', redirectTo: 'home' },
 ];
