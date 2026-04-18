@@ -1,5 +1,7 @@
 # Builds the Omega Angular documentation site (VitePress in docs/) and deploys to GitHub Pages.
-# One-time: Settings → Pages → Build and deployment → Source: GitHub Actions
+# Do NOT add a second workflow that upload-pages-artifact from repo root — it has no index.html and will overwrite this site.
+# One-time: Settings → Pages → Source: GitHub Actions. Site URL: https://<owner>.github.io/<repo>/
+# VitePress `base` in docs/.vitepress/config.mts must be '/<repo>/' (match the repository name).
 name: Deploy documentation
 
 on:
