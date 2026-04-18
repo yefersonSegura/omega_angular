@@ -30,7 +30,7 @@ features:
   - title: Flows & agents
     details: Flows orchestrate feature logic; agents run behaviors and delegate HTTP, storage, and analytics outside views.
   - title: Tooling
-    details: eslint-then builders, Omega ESLint rules, ng add omega-angular, ecosystem + feature schematics, and optional login/home starter.
+    details: eslint-then builders, Omega ESLint rules, ng add omega-angular, ecosystem + feature schematics, remove schematic, and optional login/home starter.
 ---
 
 ## What is this site?

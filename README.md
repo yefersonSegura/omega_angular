@@ -14,7 +14,7 @@ Monorepo for **Omega Angular** (`omega-angular`): an Angular/RxJS library for th
 | `projects/omega-angular/eslint-then/` | Angular CLI builders: run **ESLint** at the repository root, then delegate to the real `serve` / `build` targets. |
 | `projects/omega-angular/eslint-plugin/` | Bundled copy of the Omega ESLint rules plugin (same behavior as the dev-time plugin). |
 | `projects/omega-angular/eslint/` | `config-omega.mjs`: flat-config snippets (`omegaAngularEslintConfigs`) for `eslint.config.mjs`. |
-| `projects/omega-angular/schematics/` | **`ng add omega-angular`**, **`ng generate omega-angular:ecosystem`**, **`ng generate omega-angular:feature <name>`** (feature skeleton + merge into `omega-setup.ts` and routes). |
+| `projects/omega-angular/schematics/` | **`ng add omega-angular`**, **`ng generate omega-angular:ecosystem`**, **`ng generate omega-angular:feature`**, **`ng generate omega-angular:remove`** (revert `ng add` wiring). |
 | `projects/example/` | Demo app: mock login, `AuthFlow`, routing, `omega-setup.ts`. |
 | `projects/eslint-plugin-omega-angular/` | Source plugin used during development; the **published** copy lives inside `omega-angular`. |
 | `docs/` | Public **documentation site** (VitePress): guides, schematics overview, ESLint summary. |
@@ -115,6 +115,20 @@ ng generate omega-angular:feature cliente --project=myApp
 #   --skip-route             # do not edit app.routes.ts
 #   --skip-omega-setup       # do not edit omega-setup.ts
 ```
+
+There is **no** separate schematic for only a **flow** or only an **agent** — generate a feature and trim files, or copy the `omega/` pattern from the example app.
+
+### Revert `ng add` (`remove` schematic)
+
+`npm uninstall omega-angular` does **not** restore `angular.json` or `eslint.config.mjs`. Run:
+
+```bash
+ng generate omega-angular:remove
+ng generate omega-angular:remove --project=myApp --delete-omega-setup
+npm uninstall omega-angular
+```
+
+This restores inner `build` / `serve` targets, replaces `eslint.config.mjs` with a minimal flat config (no `omega-angular` imports), strips `omegaSetupProviders` from `app.config.ts`, and optionally deletes `omega-setup.ts` and ESLint devDependencies. See the **[Schematics](https://yefersonSegura.github.io/omega_angular/guide/schematics)** page on the docs site.
 
 ### Requirements
 

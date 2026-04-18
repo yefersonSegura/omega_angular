@@ -18,6 +18,8 @@ ng add omega-angular
 
 `ng add omega-angular` configures ESLint-first `build` / `serve`, optional `omega-setup.ts` with a **login + home** starter (unless `--minimal`), and merges providers into `app.config.ts`.
 
+To **undo** that wiring (builders, ESLint config, providers, optionally `omega-setup.ts`), use **`ng generate omega-angular:remove`** then **`npm uninstall omega-angular`** — see **[Schematics](./schematics)**.
+
 ## Use the primitives
 
 - Register **`provideOmega()`** (usually from `omega-setup.ts`).

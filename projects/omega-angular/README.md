@@ -47,6 +47,10 @@ This restores `build` / `serve` in `angular.json` from the inner targets (`app-b
 ng generate omega-angular:feature my-feature --project=myApp
 ```
 
+There is **no** separate schematic for only a **flow** or only an **agent** — the feature generator creates both plus page/API; trim or copy from an existing feature as needed.
+
+**Full command tables** (`ng add`, ecosystem, feature, remove): [Schematics guide](https://yefersonSegura.github.io/omega_angular/guide/schematics) on the documentation site.
+
 ## Manual builder wiring
 
 See the root **`README.md`** for `omega-angular:eslintThenBuild` / `eslintThenServe` and `delegateProject` / `delegateTarget`.
