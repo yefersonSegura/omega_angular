@@ -4,12 +4,13 @@ export default defineConfig({
   title: 'Omega Angular',
   description: 'Omega architecture for Angular — channel, intents, flows, agents.',
   base: '/omega_angular/',
+  appearance: true,
   head: [
-    ['link', { rel: 'icon', href: '/omega_angular/omega.svg', type: 'image/svg+xml' }],
-    ['meta', { name: 'theme-color', content: '#646cff' }],
+    ['link', { rel: 'icon', href: '/omega_angular/omega-logo.png', type: 'image/png' }],
+    ['meta', { name: 'theme-color', content: '#00d2ff' }],
   ],
   themeConfig: {
-    logo: '/omega.svg',
+    logo: '/omega-logo.png',
     nav: [
       { text: 'Guide', link: '/guide/getting-started', activeMatch: '/guide/' },
       { text: 'Repository', link: '/guide/repository' },

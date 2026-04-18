@@ -5,6 +5,9 @@ hero:
   name: Omega Angular
   text: Intent, flow, and agent architecture for Angular
   tagline: A shared channel, typed intents, OmegaFlow / OmegaAgent, and first-class tooling — ESLint-before-serve, ng add, and schematics.
+  image:
+    src: /omega-logo.png
+    alt: Omega
   actions:
     - theme: brand
       text: Get started
