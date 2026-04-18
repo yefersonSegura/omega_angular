@@ -147,16 +147,18 @@ npm install
 | `npm test` | Unit tests for the library (`ng test omega-angular --no-watch`). |
 | `npm run watch` | `ng build omega-angular --watch` in development mode. |
 | `npm run ecosystem` | `ng generate omega-angular:ecosystem --project=example` (run the ecosystem schematic on the demo app). |
+| `npm run publish:lib` | Build `dist/omega-angular` and run **`npm publish ./dist/omega-angular`** (not the private root package). Requires **`npm login`**; npm may require **2FA** (`npm publish ... --otp=CODE`). |
 
 ### Publishing the library
 
 ```bash
-npm run build:lib
-cd dist/omega-angular
-npm publish
+npm login
+npm run publish:lib
+# if npm asks for 2FA:
+# npm publish ./dist/omega-angular --access public --otp=123456
 ```
 
-The tarball includes FESM, typings, `eslint-then/`, `eslint-plugin/`, `eslint/`, `schematics/`, and a patched `package.json` with `exports` for ESLint subpaths.
+Bump **`projects/omega-angular/package.json`** `version` before each new publish. The tarball includes FESM, typings, `eslint-then/`, `eslint-plugin/`, `eslint/`, `schematics/`, and a patched `package.json` with `exports` for ESLint subpaths.
 
 ---
 
