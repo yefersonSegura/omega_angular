@@ -1,0 +1,14 @@
+{
+  "builders": {
+    "eslintThenServe": {
+      "implementation": "./eslint-then.builder.cjs",
+      "schema": "./eslint-then-serve.schema.json",
+      "description": "ESLint, then dev server (@angular/build dev-server schema)."
+    },
+    "eslintThenBuild": {
+      "implementation": "./eslint-then.builder.cjs",
+      "schema": "./eslint-then-build.schema.json",
+      "description": "ESLint, then application build (@angular/build application schema)."
+    }
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "schematics": {
+    "ng-add": {
+      "description": "ESLint-first CLI, ESLint config, and optional omega-setup ecosystem.",
+      "factory": "./ng-add/index#ngAdd",
+      "schema": "./ng-add/schema.json"
+    },
+    "ecosystem": {
+      "description": "Creates .../app/omega-setup.ts and merges omegaSetupProviders into app.config.ts (global Omega bootstrap).",
+      "factory": "./ecosystem/index#ecosystem",
+      "schema": "./ecosystem/schema.json"
+    },
+    "feature": {
+      "description": "Adds an Omega feature folder (models, services, omega/, page) and merges flow + agent into omega-setup.ts.",
+      "factory": "./feature/index#feature",
+      "schema": "./feature/schema.json"
+    }
+  }
+}

@@ -1,0 +1,12 @@
+<div class="wrap">
+  <h1>Home</h1>
+  <p>Welcome, <strong>{{ displayName() }}</strong>.</p>
+  <p class="meta">
+    Session key <code>{{ sessionKey }}</code> (agent on <code>auth.success</code>).
+  </p>
+  <nav>
+    <a routerLink="/clientes">Clientes</a>
+    <a routerLink="/login">Back to login</a>
+    <button type="button" (click)="logout()">Log out</button>
+  </nav>
+</div>

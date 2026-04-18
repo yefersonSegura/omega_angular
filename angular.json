@@ -1,0 +1,124 @@
+{
+  "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
+  "version": 1,
+  "cli": {
+    "packageManager": "npm",
+    "analytics": false
+  },
+  "newProjectRoot": "projects",
+  "projects": {
+    "omega-angular": {
+      "projectType": "library",
+      "root": "projects/omega-angular",
+      "sourceRoot": "projects/omega-angular/src",
+      "prefix": "omega",
+      "architect": {
+        "build": {
+          "builder": "@angular/build:ng-packagr",
+          "configurations": {
+            "production": {
+              "tsConfig": "projects/omega-angular/tsconfig.lib.prod.json"
+            },
+            "development": {
+              "tsConfig": "projects/omega-angular/tsconfig.lib.json"
+            }
+          },
+          "defaultConfiguration": "production"
+        },
+        "test": {
+          "builder": "@angular/build:unit-test",
+          "options": {
+            "tsConfig": "projects/omega-angular/tsconfig.spec.json"
+          }
+        }
+      }
+    },
+    "example": {
+      "projectType": "application",
+      "schematics": {},
+      "root": "projects/example",
+      "sourceRoot": "projects/example/src",
+      "prefix": "app",
+      "architect": {
+        "app-build": {
+          "builder": "@angular/build:application",
+          "options": {
+            "browser": "projects/example/src/main.ts",
+            "tsConfig": "projects/example/tsconfig.app.json",
+            "assets": [
+              {
+                "glob": "**/*",
+                "input": "projects/example/public"
+              }
+            ],
+            "styles": [
+              "projects/example/src/styles.css"
+            ]
+          },
+          "configurations": {
+            "production": {
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "500kB",
+                  "maximumError": "1MB"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "4kB",
+                  "maximumError": "8kB"
+                }
+              ],
+              "outputHashing": "all"
+            },
+            "development": {
+              "optimization": false,
+              "extractLicenses": false,
+              "sourceMap": true
+            }
+          },
+          "defaultConfiguration": "production"
+        },
+        "build": {
+          "builder": "omega-angular:eslintThenBuild",
+          "options": {
+            "delegateProject": "example",
+            "delegateTarget": "app-build"
+          },
+          "configurations": {
+            "production": {},
+            "development": {}
+          },
+          "defaultConfiguration": "production"
+        },
+        "app-serve": {
+          "builder": "@angular/build:dev-server",
+          "configurations": {
+            "production": {
+              "buildTarget": "example:app-build:production"
+            },
+            "development": {
+              "buildTarget": "example:app-build:development"
+            }
+          },
+          "defaultConfiguration": "development"
+        },
+        "serve": {
+          "builder": "omega-angular:eslintThenServe",
+          "options": {
+            "delegateProject": "example",
+            "delegateTarget": "app-serve"
+          },
+          "configurations": {
+            "production": {},
+            "development": {}
+          },
+          "defaultConfiguration": "development"
+        },
+        "test": {
+          "builder": "@angular/build:unit-test"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "name": "eslint-plugin-omega-angular",
+  "version": "0.1.0",
+  "description": "ESLint rules for apps using the omega-angular channel / flow / agent model",
+  "main": "index.cjs",
+  "type": "commonjs",
+  "keywords": ["eslint", "eslintplugin", "angular", "omega"],
+  "peerDependencies": {
+    "eslint": ">=8.57.0"
+  }
+}

@@ -1,0 +1,36 @@
+{
+  "$schema": "http://json-schema.org/schema",
+  "$id": "omega-angular-feature",
+  "title": "Omega Angular feature (flow + agent + omega/)",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Kebab-case or single name segment (e.g. cliente, order-item). Creates src/app/<name>/ with Flow + Agent + demo page.",
+      "$default": {
+        "$source": "argv",
+        "index": 0
+      }
+    },
+    "project": {
+      "type": "string",
+      "description": "Angular application project name (default: first application in angular.json)."
+    },
+    "path": {
+      "type": "string",
+      "description": "URL segment for lazy route (default: plural of name: cliente → clientes)."
+    },
+    "skipRoute": {
+      "type": "boolean",
+      "description": "Do not change app.routes.ts.",
+      "default": false
+    },
+    "skipOmegaSetup": {
+      "type": "boolean",
+      "description": "Do not merge imports/flows/agents in omega-setup.ts.",
+      "default": false
+    }
+  },
+  "required": ["name"],
+  "additionalProperties": false
+}

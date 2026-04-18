@@ -1,0 +1,26 @@
+<div class="card">
+  <h1>Sign in</h1>
+  <p class="hint">Omega Angular demo — use <code>demo</code> / <code>demo</code></p>
+  @if (error()) {
+    <p class="error" role="alert">{{ error() }}</p>
+  }
+  <label>
+    Username
+    <input
+      type="text"
+      [value]="username()"
+      (input)="onUsernameInput($any($event.target).value)"
+      autocomplete="username"
+    />
+  </label>
+  <label>
+    Password
+    <input
+      type="password"
+      [value]="password()"
+      (input)="onPasswordInput($any($event.target).value)"
+      autocomplete="current-password"
+    />
+  </label>
+  <button type="button" (click)="submit()">Login</button>
+</div>

@@ -1,0 +1,16 @@
+<div class="wrap">
+  <h1>Cliente</h1>
+  @if (loading()) {
+    <p class="muted">Loading…</p>
+  }
+  @if (error()) {
+    <p class="error" role="alert">{{ error() }}</p>
+  }
+  @if (!loading() && !error()) {
+    <ul>
+      @for (c of items(); track c.id) {
+        <li>{{ c.nombre }} <span class="meta">({{ c.id }})</span></li>
+      }
+    </ul>
+  }
+</div>

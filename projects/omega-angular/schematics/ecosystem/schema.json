@@ -1,0 +1,22 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema",
+  "title": "omega-angular ecosystem",
+  "type": "object",
+  "properties": {
+    "project": {
+      "type": "string",
+      "description": "Application project name (default: first application in angular.json)."
+    },
+    "force": {
+      "type": "boolean",
+      "description": "Overwrite omega-setup.ts if it already exists.",
+      "default": false
+    },
+    "minimal": {
+      "type": "boolean",
+      "description": "Only minimal omega-setup (no AuthFlow) and skip auth/home starter files; use ng add --minimal-ecosystem equivalent.",
+      "default": false
+    }
+  },
+  "additionalProperties": false
+}

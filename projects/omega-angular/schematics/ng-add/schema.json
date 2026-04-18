@@ -1,0 +1,37 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema",
+  "title": "omega-angular ng-add",
+  "type": "object",
+  "properties": {
+    "project": {
+      "type": "string",
+      "description": "Application project name (defaults to the first application in angular.json)."
+    },
+    "innerBuildTarget": {
+      "type": "string",
+      "description": "Architect target name for the real application build (moved from build).",
+      "default": "app-build"
+    },
+    "innerServeTarget": {
+      "type": "string",
+      "description": "Architect target name for the real dev server (moved from serve).",
+      "default": "app-serve"
+    },
+    "skipEslintConfig": {
+      "type": "boolean",
+      "description": "If true, do not create or patch eslint.config.mjs / package.json ESLint devDependencies.",
+      "default": false
+    },
+    "skipEcosystem": {
+      "type": "boolean",
+      "description": "If true, do not generate omega-setup.ts or merge app.config.ts. Run ng generate omega-angular:ecosystem later.",
+      "default": false
+    },
+    "minimalEcosystem": {
+      "type": "boolean",
+      "description": "If true, only omega-setup (empty flows) + app.config; skip generated auth/login and home/starter routes.",
+      "default": false
+    }
+  },
+  "additionalProperties": false
+}
