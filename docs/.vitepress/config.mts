@@ -13,6 +13,7 @@ export default defineConfig({
     logo: '/omega-logo.png',
     nav: [
       { text: 'Guide', link: '/guide/getting-started', activeMatch: '/guide/' },
+      { text: 'About', link: '/guide/about' },
       { text: 'Repository', link: '/guide/repository' },
       { text: 'npm', link: 'https://www.npmjs.com/package/omega-angular' },
     ],
@@ -21,6 +22,8 @@ export default defineConfig({
       {
         text: 'Introduction',
         items: [
+          { text: 'Vision & why Omega', link: '/guide/vision-and-why' },
+          { text: 'About the author', link: '/guide/about' },
           { text: 'Getting started', link: '/guide/getting-started' },
           { text: 'Core concepts', link: '/guide/concepts' },
           { text: 'Data flow', link: '/guide/data-flow' },
@@ -58,10 +61,20 @@ export default defineConfig({
       text: 'Edit this page on GitHub',
     },
 
-    socialLinks: [{ icon: 'github', link: 'https://github.com/yefersonSegura/omega_angular' }],
+    socialLinks: [
+      { icon: 'github', link: 'https://github.com/yefersonSegura/omega_angular' },
+      {
+        icon: {
+          svg: '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>',
+        },
+        link: 'https://yefersonsegura.com/',
+        ariaLabel: 'Yeferson Segura — portfolio',
+      },
+    ],
 
     footer: {
-      message: 'Omega Angular — documentation for the npm package and this repository.',
+      message:
+        'Omega Angular — by <a href="https://yefersonsegura.com/" target="_blank" rel="noopener">Yeferson Segura</a>. Documentation for the npm package and this repository.',
       copyright: 'Copyright © present',
     },
 

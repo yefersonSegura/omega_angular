@@ -1,5 +1,7 @@
 # Getting started
 
+Not sure Omega fits your app? Read **[Vision & why Omega](./vision-and-why)** before investing in the flow/agent structure.
+
 ## Install
 
 ```bash

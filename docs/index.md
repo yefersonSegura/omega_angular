@@ -10,6 +10,9 @@ hero:
     alt: Omega
   actions:
     - theme: brand
+      text: Vision & why Omega
+      link: /guide/vision-and-why
+    - theme: alt
       text: Get started
       link: /guide/getting-started
     - theme: alt
@@ -20,10 +23,12 @@ hero:
       link: https://github.com/yefersonSegura/omega_angular
 
 features:
+  - title: Vision
+    details: Intent-first collaboration — flows orchestrate, agents handle IO, one shared channel. Same philosophy as Flutter’s omega_architecture on pub.dev.
   - title: OmegaChannel & intents
     details: Broadcast events and route OmegaIntent instances through OmegaFlowManager to your flows.
   - title: Flows & agents
-    details: Flows orchestrate UI-facing logic; agents run behaviors and delegate IO (HTTP, storage) outside views.
+    details: Flows orchestrate feature logic; agents run behaviors and delegate HTTP, storage, and analytics outside views.
   - title: Tooling
     details: eslint-then builders, Omega ESLint rules, ng add omega-angular, ecosystem + feature schematics, and optional login/home starter.
 ---
@@ -32,8 +37,12 @@ features:
 
 This documentation describes the **[omega-angular](https://www.npmjs.com/package/omega-angular)** npm package and the **[omega_angular](https://github.com/yefersonSegura/omega_angular)** GitHub repository — **Angular only**.
 
-- Start with **[Getting started](/guide/getting-started)** and **[Core concepts](/guide/concepts)**.  
+- Read **[Vision & why Omega](/guide/vision-and-why)** for purpose and fit, then **[Getting started](/guide/getting-started)** and **[Core concepts](/guide/concepts)**.  
 - Follow **[Data flow](/guide/data-flow)** for an end-to-end picture, then the focused guides (**[channel](/guide/channel-events)**, **[flows](/guide/intents-flows-manager)**, **[agents](/guide/agents-behaviors)**).  
 - Use **[API reference](/guide/api-reference)** as a map of the public exports.
 
 Monorepo maintenance (`build:lib`, publishing) is covered under **[Repository layout](/guide/repository)** and the README on GitHub.
+
+## Author
+
+**Omega** is developed by **[Yeferson Segura](https://yefersonsegura.com/)** (mobile · web · product-oriented software). More context and links: **[About the author](/guide/about)**.

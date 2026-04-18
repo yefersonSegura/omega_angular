@@ -1,6 +1,6 @@
 # Core concepts
 
-omega-angular maps the **Omega** mental model to Angular: a shared **channel** for **`OmegaEvent`**, **`OmegaIntent`** objects for user/system requests, **flows** for feature orchestration, **agents** for reactions and IO, and a **flow manager** that ties routing of intents to whichever flows are active.
+omega-angular maps the **Omega** mental model to Angular: a shared **channel** for **`OmegaEvent`**, **`OmegaIntent`** objects for user/system requests, **flows** for feature orchestration, **agents** for reactions and IO, and a **flow manager** that ties routing of intents to whichever flows are active. For *why* this exists and when it pays off, read **[Vision & why Omega](./vision-and-why)** first.
 
 ## Glossary
 
