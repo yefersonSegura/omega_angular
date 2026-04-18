@@ -6,7 +6,7 @@ The tarball also ships **ESLint-first CLI builders**, the **eslint-plugin** rule
 
 ## Documentation
 
-The **full guide** is the repository root **`README.md`** (install, `ng add`, ESLint, ecosystem bootstrap, publishing).
+The **full guide** is the repository root **`README.md`** (install, `ng add`, ESLint, ecosystem, example app, and repo workflows).
 
 ## Quick start (consumer project)
 
@@ -38,11 +38,3 @@ ng generate omega-angular:feature my-feature --project=myApp
 ## Manual builder wiring
 
 See the root **`README.md`** for `omega-angular:eslintThenBuild` / `eslintThenServe` and `delegateProject` / `delegateTarget`.
-
-## Build (maintainers)
-
-```bash
-ng build omega-angular
-```
-
-In this monorepo, **`npm run build:lib`** runs lint, the library build, and **`node scripts/patch-omega-angular-package.mjs`** so `dist/omega-angular/package.json` includes the correct **`exports`** for `./eslint-plugin/index.cjs` and `./eslint/config-omega.mjs`.
