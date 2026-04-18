@@ -3,24 +3,30 @@ layout: home
 
 hero:
   name: Omega Angular
-  text: Architecture for Angular apps
-  tagline: Intents, flows, and agents over a shared OmegaChannel — with ESLint-first CLI and schematics.
+  text: Intent, flow, and agent architecture for Angular
+  tagline: A shared channel, typed intents, OmegaFlow / OmegaAgent, and first-class tooling — ESLint-before-serve, ng add, and schematics.
   actions:
     - theme: brand
       text: Get started
       link: /guide/getting-started
     - theme: alt
-      text: View on npm
+      text: npm package
       link: https://www.npmjs.com/package/omega-angular
     - theme: alt
-      text: GitHub
+      text: Source
       link: https://github.com/yefersonSegura/omega_angular
 
 features:
-  - title: OmegaChannel
-    details: Broadcast event bus for intents and reactions; namespaced helpers for features.
+  - title: OmegaChannel & intents
+    details: Broadcast events and route OmegaIntent instances through OmegaFlowManager to your flows.
   - title: Flows & agents
-    details: OmegaFlowManager routes intents to flows; agents run side effects (HTTP, storage) without leaking into views.
-  - title: Developer experience
-    details: ng add wiring, ecosystem and feature schematics, and eslint-then builders so lint runs before serve/build.
+    details: Flows orchestrate UI-facing logic; agents run behaviors and delegate IO (HTTP, storage) outside views.
+  - title: Tooling
+    details: eslint-then builders, Omega ESLint rules, ng add omega-angular, ecosystem + feature schematics, and optional login/home starter.
 ---
+
+## What is this site?
+
+This documentation describes the **[omega-angular](https://www.npmjs.com/package/omega-angular)** npm package and the **[omega_angular](https://github.com/yefersonSegura/omega_angular)** GitHub repository — **Angular only**.
+
+For monorepo commands (`build:lib`, publishing) see the **Repository** page or the README on GitHub.

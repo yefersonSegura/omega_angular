@@ -1,13 +1,18 @@
 import { defineConfig } from 'vitepress';
 
-// GitHub Pages for https://<user>.github.io/<repo>/ — keep base in sync with the repo name
 export default defineConfig({
   title: 'Omega Angular',
   description: 'Omega architecture for Angular — channel, intents, flows, agents.',
   base: '/omega_angular/',
+  head: [
+    ['link', { rel: 'icon', href: '/omega_angular/omega.svg', type: 'image/svg+xml' }],
+    ['meta', { name: 'theme-color', content: '#646cff' }],
+  ],
   themeConfig: {
+    logo: '/omega.svg',
     nav: [
       { text: 'Guide', link: '/guide/getting-started', activeMatch: '/guide/' },
+      { text: 'Repository', link: '/guide/repository' },
       { text: 'npm', link: 'https://www.npmjs.com/package/omega-angular' },
     ],
 
@@ -17,6 +22,14 @@ export default defineConfig({
         items: [
           { text: 'Getting started', link: '/guide/getting-started' },
           { text: 'Core concepts', link: '/guide/concepts' },
+          { text: 'omega-setup.ts', link: '/guide/omega-setup' },
+        ],
+      },
+      {
+        text: 'This repo',
+        items: [
+          { text: 'Repository layout', link: '/guide/repository' },
+          { text: 'Example app', link: '/guide/example-app' },
         ],
       },
       {
@@ -28,11 +41,16 @@ export default defineConfig({
       },
     ],
 
+    editLink: {
+      pattern: 'https://github.com/yefersonSegura/omega_angular/edit/main/docs/:path',
+      text: 'Edit this page on GitHub',
+    },
+
     socialLinks: [{ icon: 'github', link: 'https://github.com/yefersonSegura/omega_angular' }],
 
     footer: {
-      message: 'Released under the MIT License.',
-      copyright: 'Omega Angular',
+      message: 'Omega Angular — documentation for the npm package and this repository.',
+      copyright: 'Copyright © present',
     },
 
     search: { provider: 'local' },

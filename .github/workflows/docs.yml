@@ -1,5 +1,5 @@
-# Builds VitePress under docs/ and pushes to gh-pages for GitHub Pages.
-# Enable: Settings → Pages → Source: Deploy from branch → gh-pages / (root)
+# Builds the Omega Angular documentation site (VitePress in docs/) and deploys to GitHub Pages.
+# One-time: Settings → Pages → Build and deployment → Source: GitHub Actions
 name: Deploy documentation
 
 on:
