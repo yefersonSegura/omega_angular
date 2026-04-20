@@ -1,4 +1,12 @@
+---
+title: Schematics
+description: ng add omega-angular, ecosystem, feature, and remove schematics — options, defaults, and how they touch angular.json and app.config.
+outline: deep
+---
+
 # Schematics
+
+This topic documents the **Angular CLI schematics** shipped with the package — the same category as Angular’s own **CLI** / **generation** docs: flags, defaults, and what files change.
 
 The package ships Angular schematics under `omega-angular`.
 

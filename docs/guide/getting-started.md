@@ -1,6 +1,21 @@
+---
+title: Getting started
+description: Install omega-angular, run ng add, wire provideOmega, and follow the learning path into the guides and API reference.
+outline: deep
+---
+
 # Getting started
 
-Not sure Omega fits your app? Read **[Vision & why Omega](./vision-and-why)** before investing in the flow/agent structure.
+This topic walks through **installing** the package, **scaffolding** with `ng add`, and **where to read next** — similar in purpose to Angular’s *Getting started* flow for a new workspace.
+
+::: tip New to Omega?
+If you are still evaluating fit and trade-offs, read **[Vision & why Omega](./vision-and-why)** or the short **[Overview](./overview)** before restructuring your app.
+:::
+
+## Prerequisites
+
+- **Angular CLI** workspace (see [Angular documentation — Local setup](https://angular.dev/installation) for the current recommended versions).
+- **Node.js** and **npm** compatible with your Angular version.
 
 ## Install
 
@@ -51,3 +66,12 @@ Global bootstrap stays in **`omega-setup.ts`** (flows, agents, router bridge).
 ## Full README
 
 The canonical developer guide for this monorepo lives in the [GitHub repository README](https://github.com/yefersonSegura/omega_angular/blob/main/README.md).
+
+## What’s next
+
+| Step | Topic |
+| ---- | ----- |
+| Mental model | [Core concepts](./concepts) |
+| End-to-end path | [Data flow](./data-flow) |
+| Bootstrap file | [omega-setup.ts](./omega-setup) |
+| Public exports | [API reference](./api-reference) |

@@ -1,12 +1,20 @@
+---
+title: Agents & behaviors
+description: OmegaAgent, behavior engines, reactions, and patterns for side effects alongside OmegaFlow — aligned with the runtime implementation.
+outline: deep
+---
+
 # Agents & behaviors
 
-**`OmegaAgent`** is a **channel listener** with pluggable rules. For each incoming **`OmegaEvent`**, it runs **behavior engines** in order until one returns a **non-null reaction**; that reaction is passed to **your** handler (HTTP, `sessionStorage`, etc.).
+This topic covers **`OmegaAgent`** and **`OmegaAgentBehaviorEngine`** — the **side-effect** side of Omega, analogous to how Angular docs separate **services** and **reactive patterns** from presentation code.
+
+**`OmegaAgent`** is a **channel listener** with pluggable rules. For each incoming **`OmegaEvent`**, it runs **behavior engines** in **array order**; **every** engine that returns a **non-null** **`OmegaAgentReaction`** forwards that reaction to **your** handler (HTTP, `sessionStorage`, etc.). Multiple reactions per event are allowed.
 
 ## Pieces
 
 | Type | Role |
 | ---- | ---- |
-| **`OmegaAgentBehaviorEngine`** | Abstract class: implement **`evaluate(ctx)`** → `OmegaAgentReaction \| null`. First match wins for that event. |
+| **`OmegaAgentBehaviorEngine`** | Abstract class: implement **`evaluate(ctx)`** → `OmegaAgentReaction \| null`. Typically return one reaction or `null` per engine per event. |
 | **`OmegaAgentBehaviorContext`** | `{ event }` — read name/payload and decide. |
 | **`OmegaAgentReaction`** | `{ action: string; payload?: unknown }` — domain-specific discriminator for your handler. |
 | **`OmegaAgentReactionHandler`** | `(reaction) => void` — perform side effects (call **`AuthApi`**, write session, …). |

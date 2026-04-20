@@ -1,3 +1,9 @@
+---
+title: Channel & events
+description: OmegaChannel, OmegaChannelNamespace, emit paths, namespaces, and disposal — the broadcast event bus for omega-angular.
+outline: deep
+---
+
 # Channel & events
 
 The **`OmegaChannel`** is a **single broadcast bus**: every emission is observed by subscribers (flows via `OmegaFlowManager`, agents, and any `channel.events.subscribe` you add).

@@ -1,3 +1,9 @@
+---
+title: About the author
+description: Maintainer and background for the Omega architecture packages on Angular and Flutter.
+outline: deep
+---
+
 # About
 
 **Omega** (Flutter and Angular stacks) is created and maintained by **[Yeferson Segura](https://yefersonsegura.com/)** — software developer focused on **mobile**, **web**, and **high-impact product engineering**.

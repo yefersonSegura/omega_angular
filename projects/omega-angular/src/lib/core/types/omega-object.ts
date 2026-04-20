@@ -1,9 +1,16 @@
-/** Base for Omega system objects ([OmegaEvent], [OmegaIntent], [OmegaFailure]). */
+/**
+ * Construction data shared by {@link OmegaObject} derivatives.
+ */
 export interface OmegaObjectInit {
+  /** Correlation / tracing id (often uuid-prefixed by factories). */
   readonly id: string;
+  /** Arbitrary metadata bag; shallow-frozen on the instance. */
   readonly meta?: Readonly<Record<string, unknown>>;
 }
 
+/**
+ * Base type for {@link OmegaEvent}, {@link OmegaIntent}, and {@link OmegaFailure}.
+ */
 export abstract class OmegaObject {
   readonly id: string;
   readonly meta: Readonly<Record<string, unknown>>;

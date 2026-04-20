@@ -1,6 +1,12 @@
+---
+title: Data flow
+description: End-to-end path from Angular views through OmegaIntent, OmegaFlow, OmegaChannel, and OmegaAgent — with a sequence diagram and layering rules.
+outline: deep
+---
+
 # Data flow end to end
 
-This page describes how a user action moves through **omega-angular** in a typical app: Angular views → **intents** → **flows** → **channel events** → **agents** (IO) → events back → **flows** / **UI** / **router**.
+This topic is the **end-to-end narrative** for a single user action: Angular views → **intents** → **flows** → **channel events** → **agents** (IO) → events back → **flows** / **UI** / **router**. Use it after [Core concepts](./concepts), in the same way you would read an Angular *Essentials* guide that ties several APIs together.
 
 ## Mental model
 
@@ -10,7 +16,7 @@ This page describes how a user action moves through **omega-angular** in a typic
 | **`OmegaFlowManager`** | Sends each intent to every **active** flow’s `onIntent`. |
 | **`OmegaFlow`** | Feature orchestration: validate, emit events, no direct HTTP in the flow class (keep IO in agents). |
 | **`OmegaChannel`** | Broadcast bus of **`OmegaEvent`** — all listeners see each event (unless you use **namespaces** to narrow). |
-| **`OmegaAgent`** | Subscribes to the channel; **behavior engines** pick the first matching rule and emit a **reaction** handled by your code (API calls, storage). |
+| **`OmegaAgent`** | Subscribes to the channel; each **behavior engine** may return a **reaction** per event (multiple engines can react in order); your handler runs IO (API calls, storage). |
 
 ## Sequence (login-style example)
 
@@ -42,4 +48,9 @@ sequenceDiagram
 - **`*.agent.ts` + behaviors**: react to events; run async IO and emit results back on the channel.
 - **`omega-setup.ts`**: register all flows and agents, optional `bootstrap` (e.g. `switchTo('auth')`), and infrastructure bridges (e.g. **navigator → Router**).
 
-See also [Channel & events](./channel-events), [Intents, flows & manager](./intents-flows-manager), and [Agents & behaviors](./agents-behaviors).
+## What’s next
+
+- [Channel & events](./channel-events)
+- [Intents, flows & manager](./intents-flows-manager)
+- [Agents & behaviors](./agents-behaviors)
+- [API reference](./api-reference)

@@ -1,4 +1,12 @@
+---
+title: Navigation & Angular Router
+description: Recommended bridge pattern — flows emit navigation events; omega-setup subscribes and calls Router.navigateByUrl.
+outline: deep
+---
+
 # Navigation & Angular Router
+
+This topic shows how to integrate **`Router`** without coupling flows to Angular’s router APIs — a **bridge** pattern, much like Angular documentation describes **adapter** flows between libraries and framework services.
 
 omega-angular does **not** ship a dedicated navigator class for Angular. The recommended pattern (shown in the example app) is:
 

@@ -5,16 +5,52 @@ export default defineConfig({
   description: 'Omega architecture for Angular — channel, intents, flows, agents.',
   base: '/omega_angular/',
   appearance: true,
+  lastUpdated: true,
   head: [
     ['link', { rel: 'icon', href: '/omega_angular/omega-logo.png', type: 'image/png' }],
     ['meta', { name: 'theme-color', content: '#00d2ff' }],
   ],
   themeConfig: {
     logo: '/omega-logo.png',
+
+    /** Right-hand “On this page” outline (similar depth to angular.dev topic pages). */
+    outline: {
+      level: [2, 3],
+      label: 'On this page',
+    },
+
+    docFooter: {
+      prev: 'Previous',
+      next: 'Next',
+    },
+
     nav: [
-      { text: 'Guide', link: '/guide/getting-started', activeMatch: '/guide/' },
+      {
+        text: 'Docs',
+        link: '/guide/overview',
+        // Match with or without VitePress `base` prefix (e.g. GitHub Pages `/omega_angular/`).
+        activeMatch: '.*/guide/(?!api-reference|schematics|eslint|repository|example-app)',
+      },
+      {
+        text: 'Reference',
+        link: '/guide/api-reference',
+        activeMatch: '.*/guide/api-reference',
+      },
+      {
+        text: 'Tools',
+        items: [
+          { text: 'Schematics', link: '/guide/schematics' },
+          { text: 'ESLint', link: '/guide/eslint' },
+        ],
+      },
+      {
+        text: 'Projects',
+        items: [
+          { text: 'Repository layout', link: '/guide/repository' },
+          { text: 'Example app', link: '/guide/example-app' },
+        ],
+      },
       { text: 'About', link: '/guide/about' },
-      { text: 'Repository', link: '/guide/repository' },
       { text: 'npm', link: 'https://www.npmjs.com/package/omega-angular' },
     ],
 
@@ -22,8 +58,14 @@ export default defineConfig({
       {
         text: 'Introduction',
         items: [
+          { text: 'Overview', link: '/guide/overview' },
           { text: 'Vision & why Omega', link: '/guide/vision-and-why' },
           { text: 'About the author', link: '/guide/about' },
+        ],
+      },
+      {
+        text: 'Essentials',
+        items: [
           { text: 'Getting started', link: '/guide/getting-started' },
           { text: 'Core concepts', link: '/guide/concepts' },
           { text: 'Data flow', link: '/guide/data-flow' },
@@ -31,27 +73,30 @@ export default defineConfig({
         ],
       },
       {
-        text: 'Core library',
+        text: 'In-depth guides',
         items: [
           { text: 'Channel & events', link: '/guide/channel-events' },
           { text: 'Intents, flows & manager', link: '/guide/intents-flows-manager' },
           { text: 'Agents & behaviors', link: '/guide/agents-behaviors' },
           { text: 'Navigation & Router', link: '/guide/navigation-router' },
-          { text: 'API reference', link: '/guide/api-reference' },
         ],
       },
       {
-        text: 'This repo',
-        items: [
-          { text: 'Repository layout', link: '/guide/repository' },
-          { text: 'Example app', link: '/guide/example-app' },
-        ],
+        text: 'Reference',
+        items: [{ text: 'API reference', link: '/guide/api-reference' }],
       },
       {
-        text: 'Tooling',
+        text: 'CLI & tooling',
         items: [
           { text: 'Schematics', link: '/guide/schematics' },
           { text: 'ESLint', link: '/guide/eslint' },
+        ],
+      },
+      {
+        text: 'This repository',
+        items: [
+          { text: 'Repository layout', link: '/guide/repository' },
+          { text: 'Example app', link: '/guide/example-app' },
         ],
       },
     ],

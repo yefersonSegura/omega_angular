@@ -1,3 +1,9 @@
+---
+title: Example application
+description: Reference app in projects/example — omega-setup, auth flow, router bridge, and feature samples.
+outline: deep
+---
+
 # Example application
 
 `projects/example` is the **reference implementation** in this monorepo. Use it to see how **`omega-setup.ts`**, flows, agents, behaviors, and the **router bridge** fit together.

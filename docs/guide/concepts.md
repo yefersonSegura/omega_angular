@@ -1,4 +1,12 @@
+---
+title: Core concepts
+description: Glossary for OmegaChannel, OmegaIntent, OmegaFlow, OmegaAgent, OmegaFlowManager, and how they work together in omega-angular.
+outline: deep
+---
+
 # Core concepts
+
+This topic defines the **vocabulary** and **relationships** between the main runtime types — the same role as Angular’s *Essentials* topics that name the framework’s core building blocks.
 
 omega-angular maps the **Omega** mental model to Angular: a shared **channel** for **`OmegaEvent`**, **`OmegaIntent`** objects for user/system requests, **flows** for feature orchestration, **agents** for reactions and IO, and a **flow manager** that ties routing of intents to whichever flows are active. For *why* this exists and when it pays off, read **[Vision & why Omega](./vision-and-why)** first.
 
@@ -45,7 +53,7 @@ flowchart LR
 
 Consistency with the Flutter **omega_architecture** package is conceptual (channel, intents, flows, agents); API names may differ — see the **[Flutter documentation](https://pub.dev/packages/omega_architecture)** for parity on other stacks.
 
-## Where to read next
+## What’s next
 
 | Topic | Guide |
 | ----- | ----- |

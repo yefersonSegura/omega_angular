@@ -1,4 +1,12 @@
+---
+title: Intents, flows & flow manager
+description: OmegaIntent, OmegaFlow, OmegaFlowManager — routing handleIntent, active flows, activate, switchTo, and emit from flows.
+outline: deep
+---
+
 # Intents, flows & flow manager
+
+This topic is the **orchestration** counterpart to [Channel & events](./channel-events): how **requests** become **flow** work and how the **manager** selects listeners.
 
 ## `OmegaIntent`
 

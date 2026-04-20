@@ -1,6 +1,14 @@
-/*
- * Public API surface of omega-angular.
- * Core layout: core/types, core/events, core/semantics, core/channel.
+/**
+ * @packageDocumentation
+ * Public API surface of **`omega-angular`**: Omega channel, intents, events, flows,
+ * **`OmegaFlowManager`**, agents, and **`provideOmega`**.
+ *
+ * @remarks
+ * Layers (see also the [documentation site](https://yefersonSegura.github.io/omega_angular/)):
+ * - **Semantics & types** — wire names, **`OmegaIntent`**, **`OmegaEvent`**, base objects.
+ * - **Channel** — **`OmegaChannel`**, **`OmegaChannelNamespace`**, **`OmegaEventBus`**.
+ * - **Orchestration** — **`OmegaFlow`**, **`OmegaFlowManager`**, **`OmegaAgent`**.
+ * - **Bootstrap** — **`provideOmega`** for `ApplicationConfig` / `NgModule`.
  */
 
 // types

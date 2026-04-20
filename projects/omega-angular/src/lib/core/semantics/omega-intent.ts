@@ -7,18 +7,29 @@ function resolveIntentWireName(name: OmegaIntentWireName): string {
   return typeof name === 'string' ? name : name.name;
 }
 
-/** Options for {@link OmegaIntent.fromName}; `P` is the shape of {@link OmegaIntent.payload}. */
+/**
+ * Options for {@link OmegaIntent.fromName}.
+ *
+ * @typeParam P — Shape of {@link OmegaIntent.payload} when supplied.
+ */
 export interface OmegaIntentCreateOptions<P = unknown> {
   readonly payload?: P;
+  /** Caller-supplied id; otherwise a time/uuid-based id is generated. */
   readonly id?: string;
   readonly namespace?: string | null;
   readonly meta?: Readonly<Record<string, unknown>>;
 }
 
 /**
- * UI / system request routed by {@link OmegaFlowManager}.
- * `P` is the payload type; `out` keeps the type parameter covariant so concrete intents
- * are assignable where an untyped {@link OmegaIntent} (default `unknown`) is expected.
+ * Imperative request (UI action, command, navigation) routed by {@link OmegaFlowManager}
+ * to every **active** {@link OmegaFlow}.
+ *
+ * @typeParam P — Payload type. The `out` variance keeps concrete intents assignable where an
+ *   untyped {@link OmegaIntent} (`unknown`) is accepted, matching typical handler patterns.
+ *
+ * @remarks
+ * Prefer {@link OmegaIntent.fromName} over `new OmegaIntent` so wire names and ids stay
+ * consistent with ESLint rules in consumer apps.
  */
 export class OmegaIntent<out P = unknown> extends OmegaObject {
   readonly name: string;
@@ -38,6 +49,12 @@ export class OmegaIntent<out P = unknown> extends OmegaObject {
     this.namespace = init.namespace;
   }
 
+  /**
+   * Factory for intents resolved from an enum-like wire name or string literal.
+   *
+   * @param name — Semantic intent name (dotted wire convention when using enums).
+   * @param options — Optional `payload`, `id`, `namespace`, `meta`.
+   */
   static fromName<P = unknown>(
     name: OmegaIntentWireName,
     options: OmegaIntentCreateOptions<P> = {},
@@ -51,7 +68,11 @@ export class OmegaIntent<out P = unknown> extends OmegaObject {
     });
   }
 
-  /** When `P` is already narrow, prefer `payload`; use this to assert a subtype of `P`. */
+  /**
+   * Safe cast helper for `payload` when additional narrowing is required.
+   *
+   * @returns `null` when `payload` is `undefined`; otherwise `payload as T`.
+   */
   payloadAs<T extends P = P>(): T | null {
     const p = this.payload;
     if (p == null) {

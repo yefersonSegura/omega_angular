@@ -1,3 +1,9 @@
+---
+title: Repository layout
+description: Monorepo paths for omega-angular, example app, schematics, docs, and npm scripts for contributors.
+outline: deep
+---
+
 # Repository
 
 The [GitHub repository](https://github.com/yefersonSegura/omega_angular) is a monorepo:

@@ -1,6 +1,16 @@
+---
+title: API reference
+description: Map of the omega-angular public API — types, channel, flows, agents, and provideOmega — aligned with public-api.ts and shipped .d.ts files.
+outline: deep
+---
+
 # API reference (package surface)
 
-Exports from **`omega-angular`** follow this layout (see the library **`public-api.ts`**). Use this page as a map; TypeScript declarations in **`node_modules/omega-angular`** are authoritative.
+This topic lists the **public exports** of **`omega-angular`**. It mirrors how Angular’s docs separate **guides** from a **compact API map**; for parameter-level detail, rely on **TSDoc** in your editor or the **`.d.ts`** files in the published package (see the library’s `public-api.ts` in the repository).
+
+::: info Source of truth
+Use this page as a **navigable index**. **TypeScript** declarations under **`node_modules/omega-angular`** (or your monorepo path) are authoritative for signatures and deprecations.
+:::
 
 ## Types & semantics
 
@@ -54,3 +64,9 @@ Exports from **`omega-angular`** follow this layout (see the library **`public-a
 - **`dispatch`** → **`handleIntent`**
 
 Prefer the non-deprecated names in new code.
+
+## What’s next
+
+- [Getting started](./getting-started) — install and `ng add`
+- [Intents, flows & manager](./intents-flows-manager) — how `handleIntent` and active flows work
+- [Channel & events](./channel-events) — `OmegaChannel` and namespaces

@@ -10,11 +10,14 @@ hero:
     alt: Omega
   actions:
     - theme: brand
-      text: Vision & why Omega
-      link: /guide/vision-and-why
+      text: Overview
+      link: /guide/overview
     - theme: alt
       text: Get started
       link: /guide/getting-started
+    - theme: alt
+      text: Vision & why Omega
+      link: /guide/vision-and-why
     - theme: alt
       text: npm package
       link: https://www.npmjs.com/package/omega-angular
@@ -35,11 +38,28 @@ features:
 
 ## What is this site?
 
-This documentation describes the **[omega-angular](https://www.npmjs.com/package/omega-angular)** npm package and the **[omega_angular](https://github.com/yefersonSegura/omega_angular)** GitHub repository — **Angular only**.
+This documentation describes the **[omega-angular](https://www.npmjs.com/package/omega-angular)** npm package and the **[omega_angular](https://github.com/yefersonSegura/omega_angular)** GitHub repository — **Angular only**. The **sidebar** and **top navigation** follow the same *shape* as **[Angular’s documentation](https://angular.dev)** (introduction → essentials → in-depth guides → reference → tooling), adapted to Omega’s smaller surface area.
 
-- Read **[Vision & why Omega](/guide/vision-and-why)** for purpose and fit, then **[Getting started](/guide/getting-started)** and **[Core concepts](/guide/concepts)**.  
-- Follow **[Data flow](/guide/data-flow)** for an end-to-end picture, then the focused guides (**[channel](/guide/channel-events)**, **[flows](/guide/intents-flows-manager)**, **[agents](/guide/agents-behaviors)**).  
-- Use **[API reference](/guide/api-reference)** as a map of the public exports.
+## How the documentation is organized
+
+| Section | What you will find there |
+| ------- | ------------------------ |
+| **Introduction** | **[Overview](/guide/overview)** (map of the docs), **[Vision & why Omega](/guide/vision-and-why)**, **[About](/guide/about)**. |
+| **Essentials** | **[Getting started](/guide/getting-started)**, **[Core concepts](/guide/concepts)**, **[Data flow](/guide/data-flow)**, **[omega-setup.ts](/guide/omega-setup)** — enough to bootstrap a mental model and a project. |
+| **In-depth guides** | Channel, intents/flows/manager, agents, and **Router** integration — topic-focused pages you can read in any order after the essentials. |
+| **Reference** | **[API reference](/guide/api-reference)** — export map; **TSDoc on symbols** in the library is authoritative for signatures. |
+| **CLI & tooling** | **[Schematics](/guide/schematics)** and **[ESLint](/guide/eslint)** — `ng add`, generators, and lint guardrails. |
+| **This repository** | **[Repository layout](/guide/repository)** and the **[Example app](/guide/example-app)** for contributors and local development. |
+
+On each guide page, use **On this page** (outline) for quick jumps — the same idea as Angular’s in-page table of contents.
+
+## Suggested learning path
+
+1. **[Overview](/guide/overview)** — what the library is and how the pieces fit.  
+2. **[Vision & why Omega](/guide/vision-and-why)** or **[Getting started](/guide/getting-started)** — *why* vs *how to install*.  
+3. **[Core concepts](/guide/concepts)** and **[Data flow](/guide/data-flow)**.  
+4. Deep dives: **[Channel & events](/guide/channel-events)**, **[Intents, flows & manager](/guide/intents-flows-manager)**, **[Agents & behaviors](/guide/agents-behaviors)**.  
+5. **[API reference](/guide/api-reference)** while coding.
 
 Monorepo maintenance (`build:lib`, publishing) is covered under **[Repository layout](/guide/repository)** and the README on GitHub.
 

@@ -1,4 +1,12 @@
+---
+title: Application bootstrap (omega-setup.ts)
+description: What omega-setup.ts contains after ng add — provideOmega, router bridge, omegaSetupProviders, and ecosystem starter options.
+outline: deep
+---
+
 # Application bootstrap (`omega-setup.ts`)
+
+This topic describes the **composition root** for Omega in a consumer app — similar in spirit to Angular’s `app.config.ts` documentation that lists which providers belong at bootstrap.
 
 `ng add omega-angular` (or `ng generate omega-angular:ecosystem`) creates **`src/app/omega-setup.ts`** and merges **`omegaSetupProviders`** into **`app.config.ts`**.
 

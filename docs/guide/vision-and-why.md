@@ -1,4 +1,12 @@
+---
+title: Vision & why Omega
+description: Architectural vision for omega-angular — intents, flows, agents, shared channel, explicit activation, and ESLint as guardrails.
+outline: deep
+---
+
 # Vision & why Omega
+
+This topic explains **why** Omega exists and **when** it helps — comparable to Angular’s high-level “why Angular” narratives before you adopt patterns across a codebase.
 
 Omega is an architecture for **large or growing Angular applications** where **user intent**, **feature orchestration**, and **side effects** (HTTP, storage, analytics) should stay **explicit and decoupled**. **omega-angular** brings that model to Angular with a small runtime: **channel**, **intents**, **flows**, **agents**, and optional **tooling** (ESLint, schematics).
 

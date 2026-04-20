@@ -1,13 +1,14 @@
 import { OmegaObject } from '../types/omega-object';
 import type { OmegaEventName } from '../semantics/omega-event-name';
 
-/** Wire name from enum-like object or literal string. */
+/** Wire name from a branded {@link OmegaEventName} enum member or a plain string. */
 export type OmegaEventWireName = OmegaEventName | string;
 
 function resolveEventWireName(name: OmegaEventWireName): string {
   return typeof name === 'string' ? name : name.name;
 }
 
+/** Options for {@link OmegaEvent.fromName}. */
 export interface OmegaEventCreateOptions {
   readonly payload?: unknown;
   readonly id?: string;
@@ -15,7 +16,13 @@ export interface OmegaEventCreateOptions {
   readonly meta?: Readonly<Record<string, unknown>>;
 }
 
-/** Something that happened on the channel. */
+/**
+ * Notification that something happened, broadcast on {@link OmegaChannel}.
+ *
+ * @remarks
+ * Events are **facts** (past tense domain signals); pair with {@link OmegaIntent} for commands.
+ * Prefer {@link OmegaEvent.fromName} in application code for stable ids and lint alignment.
+ */
 export class OmegaEvent extends OmegaObject {
   readonly name: string;
   readonly payload?: unknown;
@@ -34,6 +41,10 @@ export class OmegaEvent extends OmegaObject {
     this.namespace = init.namespace;
   }
 
+  /**
+   * @param name — Wire event name.
+   * @param options — Optional `payload`, `id`, `namespace`, `meta`.
+   */
   static fromName(name: OmegaEventWireName, options: OmegaEventCreateOptions = {}): OmegaEvent {
     return new OmegaEvent({
       id: options.id ?? OmegaEvent.nextId('ev'),
@@ -44,6 +55,9 @@ export class OmegaEvent extends OmegaObject {
     });
   }
 
+  /**
+   * @returns `null` if `payload` is missing; otherwise casts `payload` to `T`.
+   */
   payloadAs<T>(): T | null {
     const p = this.payload;
     if (p == null) {
@@ -52,6 +66,12 @@ export class OmegaEvent extends OmegaObject {
     return p as T;
   }
 
+  /**
+   * JSON-serializable representation suitable for logging or persistence adapters.
+   *
+   * @remarks
+   * Omits `payload` when `undefined`; omits `namespace` when `null`; omits `meta` when empty.
+   */
   toJson(): Record<string, unknown> {
     const out: Record<string, unknown> = {
       id: this.id,
@@ -69,6 +89,11 @@ export class OmegaEvent extends OmegaObject {
     return out;
   }
 
+  /**
+   * Best-effort parser for persisted or wire JSON; validates `meta` shape lightly.
+   *
+   * @param json — Plain object; missing fields become empty strings / `null` as implemented.
+   */
   static fromJson(json: Record<string, unknown>): OmegaEvent {
     const metaRaw = json['meta'];
     const meta =

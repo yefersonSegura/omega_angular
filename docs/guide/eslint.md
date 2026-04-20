@@ -1,4 +1,12 @@
+---
+title: ESLint
+description: omegaAngularEslintConfigs, eslint-then builders, and Omega ESLint rules for orchestration vs services layout.
+outline: deep
+---
+
 # ESLint
+
+This topic covers **lint integration** — parallel to Angular’s guides on **linting** and **strictness**: flat config snippet, **eslint-then** builders, and rule semantics.
 
 ## Config snippet
 
