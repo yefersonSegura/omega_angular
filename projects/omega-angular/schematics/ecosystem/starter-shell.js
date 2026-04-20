@@ -10,7 +10,6 @@ import {
   type EnvironmentProviders,
   inject,
   makeEnvironmentProviders,
-  type Provider,
   provideEnvironmentInitializer,
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -74,7 +73,6 @@ import {
   type EnvironmentProviders,
   inject,
   makeEnvironmentProviders,
-  type Provider,
   provideEnvironmentInitializer,
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';

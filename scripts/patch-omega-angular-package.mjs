@@ -3,6 +3,7 @@ import path from "node:path";
 
 const pkgPath = path.join("dist", "omega-angular", "package.json");
 const json = JSON.parse(fs.readFileSync(pkgPath, "utf-8"));
+json.type = "commonjs";
 json.exports = {
   ...json.exports,
   "./eslint-plugin/index.cjs": "./eslint-plugin/index.cjs",

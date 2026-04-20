@@ -595,7 +595,8 @@ function featureRemove(options) {
     if (!options.skipRoute && tree.exists(appRoutesPath)) {
       let shouldRemoveParentLoadChildren = false;
       if (parentPath && parentFolder) {
-        const parentRoutesPath = `/${appDir}/features/${parentFolder}/${parentFolder}.routes.ts`.replace(/\/+/g, "/");
+        const featureParentDir = featureBase.replace(/\/[^/]+$/, "") || `/${appDir}`;
+        const parentRoutesPath = `${featureParentDir}/${parentFolder}.routes.ts`.replace(/\/+/g, "/");
         if (tree.exists(parentRoutesPath)) {
           const prBefore = tree.read(parentRoutesPath).toString("utf-8");
           const prAfter = cleanupParentRoutesFile(prBefore, { routePath });
@@ -614,6 +615,9 @@ function featureRemove(options) {
               );
             }
           }
+        } else {
+          // If the parent routes file is already missing, keep app.routes.ts consistent.
+          shouldRemoveParentLoadChildren = true;
         }
       }
 

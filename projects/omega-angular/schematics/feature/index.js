@@ -179,7 +179,11 @@ function feature(options) {
       containerParts.push(parentFolder);
     }
     const featureImportRoot = [...containerParts, folder].join("/");
-    const parentImportRoot = parentFolder ? [...baseContainerParts, parentFolder].join("/") : null;
+    const parentContainerParts = [...baseContainerParts];
+    if (parentFolder && parentContainerParts[parentContainerParts.length - 1] !== parentFolder) {
+      parentContainerParts.push(parentFolder);
+    }
+    const parentImportRoot = parentFolder ? parentContainerParts.join("/") : null;
     const parentRoutesExport = parentFolder ? `${upperSnake(parentFolder)}_ROUTES` : null;
     const base = `/${appDir}/${featureImportRoot}`.replace(/\/+/g, "/");
 
@@ -262,7 +266,6 @@ function feature(options) {
       if (parentPath && parentFolder && parentImportRoot && parentRoutesExport) {
         const parentRoutesPath = `/${appDir}/${parentImportRoot}/${parentFolder}.routes.ts`.replace(/\/+/g, "/");
         const defaultParentRoutes = `import { Routes } from '@angular/router';
-import { authGuard } from '../../omega-setup';
 
 export const ${parentRoutesExport}: Routes = [];
 `;
@@ -450,7 +453,6 @@ function upsertParentRoutesFile(content, p) {
     path: '${p.routePath}',
     loadComponent: () =>
       import('./${p.folder}/views/${p.folder}-page.component').then((m) => m.${p.pageClass}),
-    canActivate: [authGuard],
   },
 `;
   return content.replace(/\]\s*;?\s*$/m, `${block}];`);

@@ -28,6 +28,15 @@ function ngAdd(options) {
 
 function ngAddCore(options) {
   return (tree, context) => {
+    const tsconfigAppPath = "/tsconfig.app.json";
+    const tsconfigSpecPath = "/tsconfig.spec.json";
+    const tsconfigAppBefore = tree.exists(tsconfigAppPath)
+      ? tree.read(tsconfigAppPath).toString("utf-8")
+      : null;
+    const tsconfigSpecBefore = tree.exists(tsconfigSpecPath)
+      ? tree.read(tsconfigSpecPath).toString("utf-8")
+      : null;
+
     const angularJsonPath = "/angular.json";
     if (!tree.exists(angularJsonPath)) {
       throw new Error("angular.json not found — run the schematic from the directory that contains it (usually the repo or app root).");
@@ -64,8 +73,22 @@ function ngAddCore(options) {
       context.logger.info("omega-angular: skipped ESLint config (--skip-eslint-config).");
     }
 
+    restoreTsconfigIfChanged(tree, context, tsconfigAppPath, tsconfigAppBefore);
+    restoreTsconfigIfChanged(tree, context, tsconfigSpecPath, tsconfigSpecBefore);
+
     return tree;
   };
+}
+
+function restoreTsconfigIfChanged(tree, context, path, beforeContent) {
+  if (beforeContent == null || !tree.exists(path)) {
+    return;
+  }
+  const current = tree.read(path).toString("utf-8");
+  if (current !== beforeContent) {
+    tree.overwrite(path, beforeContent);
+    context.logger.info(`omega-angular: preserved ${path.replace(/^\//, "")} (no ng-add tsconfig changes).`);
+  }
 }
 
 function ngAddEcosystemHook(options) {
