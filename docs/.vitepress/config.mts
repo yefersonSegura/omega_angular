@@ -59,6 +59,7 @@ export default defineConfig({
         text: 'Introduction',
         items: [
           { text: 'Overview', link: '/guide/overview' },
+          { text: 'What Omega solves', link: '/guide/what-omega-solves' },
           { text: 'Vision & why Omega', link: '/guide/vision-and-why' },
           { text: 'About the author', link: '/guide/about' },
         ],
@@ -79,6 +80,9 @@ export default defineConfig({
           { text: 'Intents, flows & manager', link: '/guide/intents-flows-manager' },
           { text: 'Agents & behaviors', link: '/guide/agents-behaviors' },
           { text: 'Navigation & Router', link: '/guide/navigation-router' },
+          { text: 'Wire names & feature layout', link: '/guide/wire-names-and-layout' },
+          { text: 'Cookbook', link: '/guide/cookbook' },
+          { text: 'Testing', link: '/guide/testing' },
         ],
       },
       {

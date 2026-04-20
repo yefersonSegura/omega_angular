@@ -9,7 +9,7 @@ outline: deep
 **omega-angular** is a small **Angular + RxJS** library and optional **tooling** (ESLint rules, **eslint-then** builders, **schematics**) that implements the **Omega** architecture: a shared **`OmegaChannel`**, **`OmegaIntent`** requests, **`OmegaFlow`** orchestration, **`OmegaAgent`** side effects, and an **`OmegaFlowManager`** that routes intents to active flows.
 
 ::: tip When to read this page
-Use this page as the **map of the documentation**. For motivation and trade-offs, read [Vision & why Omega](./vision-and-why) next (or first, if you are evaluating the architecture).
+Use this page as the **map of the documentation**. For **concrete problems and solutions**, read [What Omega solves](./what-omega-solves). For **motivation and trade-offs**, read [Vision & why Omega](./vision-and-why).
 :::
 
 ## What you will use in an app
@@ -34,6 +34,10 @@ This site explains **behavior and patterns**. The **authoritative API list** is 
 
 | Goal | Guide |
 | ---- | ----- |
+| Problems → Omega answers | [What Omega solves](./what-omega-solves) |
+| Copy-paste examples | [Cookbook](./cookbook) |
+| Folders & wire tables | [Wire names & feature layout](./wire-names-and-layout) |
+| Unit tests | [Testing](./testing) |
 | Install and scaffold | [Getting started](./getting-started) |
 | Mental model and glossary | [Core concepts](./concepts) |
 | End-to-end sequence | [Data flow](./data-flow) |

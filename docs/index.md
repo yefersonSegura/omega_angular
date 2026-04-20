@@ -13,6 +13,9 @@ hero:
       text: Overview
       link: /guide/overview
     - theme: alt
+      text: What Omega solves
+      link: /guide/what-omega-solves
+    - theme: alt
       text: Get started
       link: /guide/getting-started
     - theme: alt
@@ -27,7 +30,7 @@ hero:
 
 features:
   - title: Vision
-    details: Intent-first collaboration — flows orchestrate, agents handle IO, one shared channel. Same philosophy as Flutter’s omega_architecture on pub.dev.
+    details: Intent-first collaboration — flows orchestrate, agents handle IO, one shared channel. Guardrails via ESLint and schematics keep the model consistent as the app grows.
   - title: OmegaChannel & intents
     details: Broadcast events and route OmegaIntent instances through OmegaFlowManager to your flows.
   - title: Flows & agents
@@ -44,9 +47,9 @@ This documentation describes the **[omega-angular](https://www.npmjs.com/package
 
 | Section | What you will find there |
 | ------- | ------------------------ |
-| **Introduction** | **[Overview](/guide/overview)** (map of the docs), **[Vision & why Omega](/guide/vision-and-why)**, **[About](/guide/about)**. |
+| **Introduction** | **[Overview](/guide/overview)**, **[What Omega solves](/guide/what-omega-solves)**, **[Vision & why Omega](/guide/vision-and-why)**, **[About](/guide/about)**. |
 | **Essentials** | **[Getting started](/guide/getting-started)**, **[Core concepts](/guide/concepts)**, **[Data flow](/guide/data-flow)**, **[omega-setup.ts](/guide/omega-setup)** — enough to bootstrap a mental model and a project. |
-| **In-depth guides** | Channel, intents/flows/manager, agents, and **Router** integration — topic-focused pages you can read in any order after the essentials. |
+| **In-depth guides** | Channel, intents/flows/manager, agents, **Router** integration, **[Wire names & layout](/guide/wire-names-and-layout)**, **[Cookbook](/guide/cookbook)**, **[Testing](/guide/testing)**. |
 | **Reference** | **[API reference](/guide/api-reference)** — export map; **TSDoc on symbols** in the library is authoritative for signatures. |
 | **CLI & tooling** | **[Schematics](/guide/schematics)** and **[ESLint](/guide/eslint)** — `ng add`, generators, and lint guardrails. |
 | **This repository** | **[Repository layout](/guide/repository)** and the **[Example app](/guide/example-app)** for contributors and local development. |
@@ -56,10 +59,12 @@ On each guide page, use **On this page** (outline) for quick jumps — the same 
 ## Suggested learning path
 
 1. **[Overview](/guide/overview)** — what the library is and how the pieces fit.  
-2. **[Vision & why Omega](/guide/vision-and-why)** or **[Getting started](/guide/getting-started)** — *why* vs *how to install*.  
-3. **[Core concepts](/guide/concepts)** and **[Data flow](/guide/data-flow)**.  
-4. Deep dives: **[Channel & events](/guide/channel-events)**, **[Intents, flows & manager](/guide/intents-flows-manager)**, **[Agents & behaviors](/guide/agents-behaviors)**.  
-5. **[API reference](/guide/api-reference)** while coding.
+2. **[What Omega solves](/guide/what-omega-solves)** — problems and mapping to intents/flows/agents.  
+3. **[Cookbook](/guide/cookbook)** — runnable patterns from the example app.  
+4. **[Vision & why Omega](/guide/vision-and-why)** or **[Getting started](/guide/getting-started)** — *why* vs *how to install*.  
+5. **[Core concepts](/guide/concepts)** and **[Data flow](/guide/data-flow)**.  
+6. Deep dives: **[Channel & events](/guide/channel-events)**, **[Intents, flows & manager](/guide/intents-flows-manager)**, **[Agents & behaviors](/guide/agents-behaviors)**, **[Wire names & layout](/guide/wire-names-and-layout)**, **[Testing](/guide/testing)**.  
+7. **[API reference](/guide/api-reference)** while coding.
 
 Monorepo maintenance (`build:lib`, publishing) is covered under **[Repository layout](/guide/repository)** and the README on GitHub.
 

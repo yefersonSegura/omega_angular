@@ -43,11 +43,15 @@ To **undo** that wiring (builders, ESLint config, providers, optionally `omega-s
 
 ## Learn the runtime
 
-1. [Core concepts](./concepts) — glossary and diagram  
-2. [Data flow](./data-flow) — intents → flows → channel → agents  
-3. [Channel & events](./channel-events), [Intents & flows](./intents-flows-manager), [Agents](./agents-behaviors)  
-4. [Navigation & Router](./navigation-router) — bridge pattern with `Router`  
-5. [API reference](./api-reference) — package exports  
+1. [What Omega solves](./what-omega-solves) — pain points and how the library answers them  
+2. [Cookbook](./cookbook) — step-by-step code recipes (auth-style flow)  
+3. [Core concepts](./concepts) — glossary and diagram  
+4. [Data flow](./data-flow) — intents → flows → channel → agents  
+5. [Channel & events](./channel-events), [Intents & flows](./intents-flows-manager), [Agents](./agents-behaviors)  
+6. [Wire names & feature layout](./wire-names-and-layout) — `AuthWire`-style tables and folders  
+7. [Testing](./testing) — unit-test the channel and flows  
+8. [Navigation & Router](./navigation-router) — bridge pattern with `Router`  
+9. [API reference](./api-reference) — package exports  
 
 ## Repository layout (example)
 

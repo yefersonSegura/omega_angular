@@ -10,8 +10,6 @@ This topic explains **why** Omega exists and **when** it helps — comparable to
 
 Omega is an architecture for **large or growing Angular applications** where **user intent**, **feature orchestration**, and **side effects** (HTTP, storage, analytics) should stay **explicit and decoupled**. **omega-angular** brings that model to Angular with a small runtime: **channel**, **intents**, **flows**, **agents**, and optional **tooling** (ESLint, schematics).
 
-The same *ideas* exist for Flutter in **[omega_architecture](https://pub.dev/packages/omega_architecture)** on pub.dev — Omega is a **cross-stack contract**, not only an Angular library.
-
 ## Vision
 
 1. **Intent-first** — Everything important a user or subsystem wants to do is expressed as an **`OmegaIntent`** (a name + typed payload). That makes “what happened” readable in logs, tests, and code reviews.
@@ -32,7 +30,7 @@ In short: Omega’s vision is a **structured, event-driven collaboration layer**
 | ------ | ------ |
 | **Scales with features** | Add a feature folder with `omega/` (flow, behaviors, agent) without rewiring the whole app — register in `omega-setup.ts`. |
 | **Testability** | Drive flows with **`handleIntent`**; assert **`OmegaChannel`** emissions; mock **`HttpClient`** behind agents — boundaries are explicit. |
-| **Aligned teams** | Same vocabulary as **Flutter Omega** where you ship both stacks; comparable mental model for docs and onboarding. |
+| **Aligned teams** | Shared vocabulary (**intent**, **event**, **flow**, **agent**) across features and in docs — easier onboarding and PR reviews. |
 | **Less “god services”** | Orchestration sits in flows; long if-chains of unrelated concerns are harder to justify when agents and events are the default path. |
 | **Shipped tooling** | `ng add omega-angular`, feature/ecosystem schematics, bundled ESLint config — less boilerplate and fewer ad-hoc patterns. |
 
@@ -44,6 +42,8 @@ In short: Omega’s vision is a **structured, event-driven collaboration layer**
 
 ## Where to go next
 
+- **[What Omega solves](./what-omega-solves)** — problems and how the pieces answer them  
+- **[Cookbook](./cookbook)** — concrete code recipes  
 - **[Core concepts](./concepts)** — glossary and diagrams  
 - **[Data flow](./data-flow)** — one path through the system  
 - **[Getting started](./getting-started)** — install and first steps  

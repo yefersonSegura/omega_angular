@@ -51,7 +51,7 @@ flowchart LR
 3. **Agents + services** — side effects: REST, storage, analytics.
 4. **`omega-setup.ts`** — composition: `provideOmega`, router bridges, guards.
 
-Consistency with the Flutter **omega_architecture** package is conceptual (channel, intents, flows, agents); API names may differ — see the **[Flutter documentation](https://pub.dev/packages/omega_architecture)** for parity on other stacks.
+Across **multiple features in one Angular codebase**, the same vocabulary (**intents**, **events**, **flows**, **agents**) keeps reviews and onboarding predictable.
 
 ## What’s next
 
