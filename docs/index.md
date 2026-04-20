@@ -49,7 +49,7 @@ This documentation describes the **[omega-angular](https://www.npmjs.com/package
 | ------- | ------------------------ |
 | **Introduction** | **[Overview](/guide/overview)**, **[What Omega solves](/guide/what-omega-solves)**, **[Vision & why Omega](/guide/vision-and-why)**, **[About](/guide/about)**. |
 | **Essentials** | **[Getting started](/guide/getting-started)**, **[Core concepts](/guide/concepts)**, **[Data flow](/guide/data-flow)**, **[omega-setup.ts](/guide/omega-setup)** — enough to bootstrap a mental model and a project. |
-| **In-depth guides** | Channel, intents/flows/manager, agents, **Router** integration, **[Wire names & layout](/guide/wire-names-and-layout)**, **[Cookbook](/guide/cookbook)**, **[Testing](/guide/testing)**. |
+| **In-depth guides** | Channel, intents/flows/manager, agents, **Router** integration, **[Omega Inspector](/guide/inspector)**, **[Wire names & layout](/guide/wire-names-and-layout)**, **[Cookbook](/guide/cookbook)**, **[Testing](/guide/testing)**. |
 | **Reference** | **[API reference](/guide/api-reference)** — export map; **TSDoc on symbols** in the library is authoritative for signatures. |
 | **CLI & tooling** | **[Schematics](/guide/schematics)** and **[ESLint](/guide/eslint)** — `ng add`, generators, and lint guardrails. |
 | **This repository** | **[Repository layout](/guide/repository)** and the **[Example app](/guide/example-app)** for contributors and local development. |

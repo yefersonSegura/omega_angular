@@ -15,6 +15,11 @@
       "factory": "./feature/index#feature",
       "schema": "./feature/schema.json"
     },
+    "feature-remove": {
+      "description": "Removes one generated Omega feature folder and cleans omega-setup.ts + app.routes.ts references.",
+      "factory": "./feature-remove/index#featureRemove",
+      "schema": "./feature-remove/schema.json"
+    },
     "remove": {
       "description": "Reverts eslint-then in angular.json, trims eslint.config.mjs, removes omegaSetupProviders from app.config. Optional: delete app/omega-setup.ts. Then npm uninstall omega-angular.",
       "factory": "./remove/index#removeOmega",

@@ -54,9 +54,22 @@ Use this page as a **navigable index**. **TypeScript** declarations under **`nod
 
 | Symbol | Description |
 | ------ | ----------- |
-| **`provideOmega(options)`** | Returns **`Provider[]`**: channel, manager, flows, **`APP_INITIALIZER`** for **`bootstrap`** + **`createAgents`**. |
+| **`provideOmega(options)`** | Returns providers for channel, manager, flows, and an app initializer that runs **`bootstrap`** + **`createAgents`**. |
 | **`OmegaProvideOptions`** | `createFlows`, optional `bootstrap`, optional `createAgents`. |
 | **`OmegaRuntimeContext`** | `{ channel, manager }` passed to **`bootstrap`** / **`createAgents`**. |
+
+## Inspector (diagnostics)
+
+| Symbol | Description |
+| ------ | ----------- |
+| **`provideOmegaInspector(options?)`** | **`Provider[]`** — registers **`OmegaInspectorService`** + optional **`OMEGA_FLOW_MANAGER_INSTRUMENTATION`**. Place **before** **`provideOmega`**. |
+| **`OmegaInspectorService`** | Buffers channel events + intents; optional **`BroadcastChannel`**. |
+| **`OmegaInspectorPanelComponent`** | Standalone UI (**`<omega-inspector-panel />`**). |
+| **`OmegaFlowManagerInstrumentation`** | Optional hooks on **`OmegaFlowManager`** (used by the inspector). |
+| **`OMEGA_FLOW_MANAGER_INSTRUMENTATION`** | Injection token for custom instrumentation. |
+| **`OmegaInspectorGlobalApi`** | Shape of **`window.__OMEGA_INSPECTOR__`** (console API + log getters). |
+| **`provideOmegaInspectorFloatingUi()`** | Mounts **`OmegaInspectorFloatingComponent`** on **`document.body`** (no Router). |
+| **`OmegaInspectorFloatingComponent`** | Floating **Ω** button + expandable panel shell. |
 
 ## Deprecated aliases
 

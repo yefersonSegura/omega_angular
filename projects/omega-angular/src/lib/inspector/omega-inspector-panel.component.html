@@ -1,0 +1,106 @@
+<div class="omega-inspector">
+  <header class="omega-inspector__header">
+    <div>
+      <div class="omega-inspector__title">OMEGA INSPECTOR</div>
+      <div class="omega-inspector__subtitle">Flows · Channel events · Intents</div>
+    </div>
+    <div class="omega-inspector__status">
+      <span
+        class="omega-inspector__dot"
+        [class.omega-inspector__dot--off]="inspector.channelLog().length === 0 && inspector.intentLog().length === 0"
+      ></span>
+      @if (inspector.channelLog().length + inspector.intentLog().length === 0) {
+        <span>Idle</span>
+      } @else {
+        <span>Live</span>
+      }
+    </div>
+  </header>
+
+  <p class="omega-inspector__hint">
+    Subscribes to the same <code>OmegaChannel</code> as your app and records
+    <strong>handleIntent</strong> calls. Use <strong>Clear</strong> to reset buffers. For a second tab on the
+    same origin, enable <code>broadcastChannel</code> in <code>provideOmegaInspector</code>.
+  </p>
+
+  <div class="omega-inspector__grid">
+    <!-- Flows -->
+    <section class="omega-inspector__col">
+      <div class="omega-inspector__col-head">Flows</div>
+      <ul class="omega-inspector__list">
+        @for (id of inspector.registeredFlowIds(); track id) {
+          <li class="omega-inspector__item">
+            <span class="omega-inspector__item-name">{{ id }}</span>
+            @if (inspector.activeFlowIds().includes(id)) {
+              <span class="omega-inspector__flow-pill omega-inspector__flow-pill--active">active</span>
+            } @else {
+              <span class="omega-inspector__flow-pill">registered</span>
+            }
+          </li>
+        } @empty {
+          <li class="omega-inspector__item omega-inspector__details--empty">No flows registered yet.</li>
+        }
+      </ul>
+    </section>
+
+    <!-- Events + intents list -->
+    <section class="omega-inspector__col">
+      <div class="omega-inspector__col-head">
+        Events <span>({{ inspector.channelLog().length }})</span> · Intents
+        <span>({{ inspector.intentLog().length }})</span>
+      </div>
+      <ul class="omega-inspector__list">
+        @for (e of inspector.channelLog(); track e.id + e.t) {
+          <li
+            class="omega-inspector__item"
+            [class.omega-inspector__item--active]="isChannelActive(e)"
+            (click)="inspector.selectChannelEntry(e)"
+          >
+            <div class="omega-inspector__item-id">{{ e.id }}</div>
+            <div class="omega-inspector__item-name">{{ e.name }}</div>
+            <div class="omega-inspector__item-meta">{{ e.payloadPreview }}</div>
+            @if (e.deliveredToFlowIds.length > 0) {
+              <div class="omega-inspector__item-flows">
+                @for (flowId of e.deliveredToFlowIds; track flowId) {
+                  <span class="omega-inspector__flow-pill omega-inspector__flow-pill--active">{{ flowId }}</span>
+                }
+              </div>
+            } @else {
+              <div class="omega-inspector__item-meta">No active flows at emit time.</div>
+            }
+          </li>
+        }
+        @for (i of inspector.intentLog(); track i.id + i.t) {
+          <li
+            class="omega-inspector__item"
+            [class.omega-inspector__item--active]="isIntentActive(i)"
+            (click)="inspector.selectIntentEntry(i)"
+          >
+            <div class="omega-inspector__item-id">intent {{ i.id }}</div>
+            <div class="omega-inspector__item-name">{{ i.name }}</div>
+            <div class="omega-inspector__item-meta">{{ i.payloadPreview }}</div>
+          </li>
+        }
+        @if (inspector.channelLog().length === 0 && inspector.intentLog().length === 0) {
+          <li class="omega-inspector__item omega-inspector__details--empty">No channel events or intents yet.</li>
+        }
+      </ul>
+    </section>
+
+    <!-- Details -->
+    <section class="omega-inspector__col">
+      <div class="omega-inspector__col-head">Details</div>
+      @if (inspector.detailsJson()) {
+        <pre class="omega-inspector__details">{{ inspector.detailsJson() }}</pre>
+      } @else {
+        <div class="omega-inspector__details omega-inspector__details--empty">
+          Select an event or intent from the list.
+        </div>
+      }
+    </section>
+  </div>
+
+  <div class="omega-inspector__toolbar">
+    <button type="button" class="omega-inspector__btn" (click)="clear()">Clear logs</button>
+  </div>
+</div>

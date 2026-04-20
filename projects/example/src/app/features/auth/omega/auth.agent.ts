@@ -10,13 +10,18 @@ import { AuthSession } from './auth.session';
 import { writeAuthSessionSnapshotJson } from './auth.storage';
 
 function runRemoteLogin(channel: OmegaChannel, authApi: AuthApi, credentials: AuthRemoteLoginPayload): void {
-  void firstValueFrom(authApi.login(credentials)).then((result) => {
-    if (result.ok) {
-      channel.emitNamed(AuthWire.success, { username: result.username } satisfies AuthSessionSnapshotPayload);
-    } else {
-      channel.emitNamed(AuthWire.failure, { reason: result.reason });
-    }
-  });
+  void firstValueFrom(authApi.login(credentials))
+    .then((result) => {
+      if (result.ok) {
+        channel.emitNamed(AuthWire.success, { username: result.username } satisfies AuthSessionSnapshotPayload);
+      } else {
+        channel.emitNamed(AuthWire.failure, { reason: result.reason });
+      }
+    })
+    .catch((error) => {
+      console.error('[Omega][auth.agent][remoteLogin]', error);
+      channel.emitNamed(AuthWire.failure, { reason: 'Unexpected login error' });
+    });
 }
 
 function runSaveSession(snapshot: AuthSessionSnapshotPayload): void {
@@ -52,5 +57,8 @@ export function createAuthAgent(channel: OmegaChannel, authApi: AuthApi): OmegaA
     channel,
     [new AuthLoginBehavior(), new AuthSessionBehavior(), new AuthLogoutBehavior()],
     createAuthAgentReactionHandler(channel, authApi),
+    (error, context) => {
+      console.error('[Omega][auth.agent]', { error, context });
+    },
   );
 }

@@ -10,7 +10,8 @@
     "types": []
   },
   "include": [
-    "src/**/*.ts"
+    "src/**/*.ts",
+    "src/lib/inspector/provide-omega-inspector-floating-ui.ts"
   ],
   "exclude": [
     "**/*.spec.ts"

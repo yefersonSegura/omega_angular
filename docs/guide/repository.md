@@ -30,4 +30,4 @@ The [GitHub repository](https://github.com/yefersonSegura/omega_angular) is a mo
 
 ## Compatibility
 
-Peers: **Angular ≥ 14**, **RxJS ≥ 7.4**. The example app follows the workspace Angular version.
+Peers: **Angular ≥ 17**, **RxJS ≥ 7.4**. The example app follows the workspace Angular version.

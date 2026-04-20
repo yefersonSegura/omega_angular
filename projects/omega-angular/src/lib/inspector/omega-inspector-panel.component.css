@@ -1,0 +1,207 @@
+.omega-inspector {
+  --oi-bg: #0a0a0c;
+  --oi-panel: #12121a;
+  --oi-border: rgba(0, 210, 255, 0.18);
+  --oi-accent: #00d2ff;
+  --oi-muted: #8b8b9a;
+  --oi-text: #e8e8ef;
+  --oi-danger: #ff6b6b;
+
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 0;
+  overflow: hidden;
+  background: var(--oi-bg);
+  color: var(--oi-text);
+  font-family: ui-sans-serif, system-ui, sans-serif;
+  font-size: 13px;
+}
+
+.omega-inspector__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--oi-border);
+  background: linear-gradient(90deg, rgba(157, 80, 187, 0.12), rgba(0, 210, 255, 0.06));
+}
+
+.omega-inspector__title {
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  font-size: 14px;
+}
+
+.omega-inspector__subtitle {
+  font-size: 11px;
+  color: var(--oi-muted);
+  margin-top: 2px;
+}
+
+.omega-inspector__status {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  border: 1px solid var(--oi-border);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.omega-inspector__dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--oi-accent);
+  box-shadow: 0 0 8px var(--oi-accent);
+}
+
+.omega-inspector__dot--off {
+  background: var(--oi-danger);
+  box-shadow: none;
+}
+
+.omega-inspector__hint {
+  padding: 10px 16px;
+  font-size: 12px;
+  color: var(--oi-muted);
+  border-bottom: 1px solid var(--oi-border);
+  line-height: 1.45;
+}
+
+.omega-inspector__grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr) minmax(0, 1fr);
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.omega-inspector__col {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 0;
+  border-right: 1px solid var(--oi-border);
+}
+
+.omega-inspector__col:last-child {
+  border-right: none;
+}
+
+.omega-inspector__col-head {
+  padding: 8px 12px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--oi-muted);
+  border-bottom: 1px solid var(--oi-border);
+  background: var(--oi-panel);
+}
+
+.omega-inspector__col-head span {
+  color: var(--oi-accent);
+}
+
+.omega-inspector__list {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.omega-inspector__item {
+  padding: 8px 12px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+  cursor: pointer;
+  line-height: 1.35;
+}
+
+.omega-inspector__item:hover {
+  background: rgba(0, 210, 255, 0.06);
+}
+
+.omega-inspector__item--active {
+  background: rgba(157, 80, 187, 0.18);
+  border-left: 3px solid var(--oi-accent);
+  padding-left: 9px;
+}
+
+.omega-inspector__item-id {
+  font-size: 10px;
+  color: var(--oi-muted);
+  font-family: ui-monospace, monospace;
+}
+
+.omega-inspector__item-name {
+  font-weight: 600;
+  color: var(--oi-text);
+}
+
+.omega-inspector__item-meta {
+  font-size: 11px;
+  color: var(--oi-muted);
+  margin-top: 2px;
+}
+
+.omega-inspector__details {
+  padding: 12px;
+  overflow: auto;
+  flex: 1;
+  min-height: 0;
+  font-family: ui-monospace, monospace;
+  font-size: 11px;
+  line-height: 1.45;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.omega-inspector__details--empty {
+  color: var(--oi-muted);
+  font-family: ui-sans-serif, system-ui, sans-serif;
+}
+
+.omega-inspector__toolbar {
+  display: flex;
+  gap: 8px;
+  padding: 8px 12px;
+  border-top: 1px solid var(--oi-border);
+}
+
+.omega-inspector__btn {
+  padding: 6px 12px;
+  border-radius: 6px;
+  border: 1px solid var(--oi-border);
+  background: rgba(0, 210, 255, 0.12);
+  color: var(--oi-text);
+  cursor: pointer;
+  font-size: 12px;
+}
+
+.omega-inspector__btn:hover {
+  background: rgba(0, 210, 255, 0.22);
+}
+
+.omega-inspector__flow-pill {
+  display: inline-block;
+  margin: 2px 4px 0 0;
+  padding: 2px 6px;
+  border-radius: 4px;
+  background: rgba(157, 80, 187, 0.25);
+  font-size: 10px;
+}
+
+.omega-inspector__flow-pill--active {
+  background: rgba(0, 210, 255, 0.2);
+  outline: 1px solid var(--oi-accent);
+}
+
+.omega-inspector__item-flows {
+  margin-top: 4px;
+}

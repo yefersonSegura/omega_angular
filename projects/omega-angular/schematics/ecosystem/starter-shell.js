@@ -15,7 +15,7 @@ import {
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Router } from '@angular/router';
-import { OmegaChannel, OmegaEvent, provideOmega, type OmegaProvideOptions } from 'omega-angular';
+import { OmegaChannel, OmegaEvent, provideOmega, provideOmegaInspector, provideOmegaInspectorFloatingUi, type OmegaProvideOptions } from 'omega-angular';
 
 const NAVIGATOR_EVENT = OmegaEvent.fromName('navigator');
 
@@ -23,10 +23,13 @@ const NAVIGATOR_EVENT = OmegaEvent.fromName('navigator');
 function createAppOmegaOptions(): OmegaProvideOptions {
   return {
     createFlows: (_channel) => [],
+    onChannelEmitError: (error, stack) => {
+      console.error('[Omega][channel.emit]', { error, stack });
+    },
   };
 }
 
-function provideOmegaApp(): Provider[] {
+function provideOmegaApp(): ReturnType<typeof provideOmega> {
   return provideOmega(createAppOmegaOptions());
 }
 
@@ -51,7 +54,12 @@ function provideOmegaNavigationBridge(): EnvironmentProviders {
 }
 
 /** Add to app.config.ts together with your other ApplicationConfig.providers. */
-export const omegaSetupProviders = [provideOmegaApp(), provideOmegaNavigationBridge()] as const;
+export const omegaSetupProviders = [
+  ...provideOmegaInspector({ consoleLog: true, exposeGlobal: true }),
+  ...provideOmegaApp(),
+  provideOmegaNavigationBridge(),
+  ...provideOmegaInspectorFloatingUi(),
+] as const;
 `;
 
 /** Default after ng add / ecosystem: AuthFlow + login + home wiring (demo / demo credentials). */
@@ -71,15 +79,15 @@ import {
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Router, type CanActivateFn, type ResolveFn } from '@angular/router';
-import { OmegaChannel, provideOmega, type OmegaProvideOptions } from 'omega-angular';
+import { OmegaChannel, provideOmega, provideOmegaInspector, provideOmegaInspectorFloatingUi, type OmegaProvideOptions } from 'omega-angular';
 
-import { AuthApi } from './auth/services/auth.api';
-import { AUTH_SESSION_KEY, NAVIGATOR_EVENT } from './auth/omega/auth.constants';
-import { createAuthAgent } from './auth/omega/auth.agent';
-import { AuthFlow } from './auth/omega/auth.flow';
-import { AuthSession } from './auth/omega/auth.session';
+import { AuthApi } from './features/auth/services/auth.api';
+import { AUTH_SESSION_KEY, NAVIGATOR_EVENT } from './features/auth/omega/auth.constants';
+import { createAuthAgent } from './features/auth/omega/auth.agent';
+import { AuthFlow } from './features/auth/omega/auth.flow';
+import { AuthSession } from './features/auth/omega/auth.session';
 
-export { AUTH_SESSION_KEY } from './auth/omega/auth.constants';
+export { AUTH_SESSION_KEY } from './features/auth/omega/auth.constants';
 
 function createAppOmegaOptions(): OmegaProvideOptions {
   return {
@@ -90,10 +98,13 @@ function createAppOmegaOptions(): OmegaProvideOptions {
     createAgents: ({ channel }) => {
       createAuthAgent(channel, inject(AuthApi));
     },
+    onChannelEmitError: (error, stack) => {
+      console.error('[Omega][channel.emit]', { error, stack });
+    },
   };
 }
 
-function provideOmegaApp(): Provider[] {
+function provideOmegaApp(): ReturnType<typeof provideOmega> {
   return provideOmega(createAppOmegaOptions());
 }
 
@@ -129,7 +140,12 @@ export const homePageResolver: ResolveFn<{ displayName: string; sessionKey: stri
 });
 
 /** Add with other \`ApplicationConfig.providers\` in \`app.config.ts\`. */
-export const omegaSetupProviders = [provideOmegaApp(), provideOmegaNavigationBridge()] as const;
+export const omegaSetupProviders = [
+  ...provideOmegaInspector({ consoleLog: true, exposeGlobal: true }),
+  ...provideOmegaApp(),
+  provideOmegaNavigationBridge(),
+  ...provideOmegaInspectorFloatingUi(),
+] as const;
 `;
 
 const APP_ROUTES_STARTER = `import { Routes } from '@angular/router';
@@ -141,12 +157,12 @@ export const routes: Routes = [
   {
     path: 'login',
     loadComponent: () =>
-      import('./auth/views/auth-page.component').then((m) => m.AuthPageComponent),
+      import('./features/auth/views/auth-page.component').then((m) => m.AuthPageComponent),
   },
   {
     path: 'home',
     loadComponent: () =>
-      import('./home-page/home-page.component').then((m) => m.HomePageComponent),
+      import('./features/home/home-page.component').then((m) => m.HomePageComponent),
     canActivate: [authGuard],
     resolve: { home: homePageResolver },
   },
@@ -308,7 +324,7 @@ function applyRootShellLayout(tree, appDir, context) {
 function getAuthAndHomeFiles() {
   return /** @type {const} */ ([
     [
-      "auth/models/auth.models.ts",
+      "features/auth/models/auth.models.ts",
       `import { AuthAgentAction } from '../omega/auth.constants';
 
 /** Credentials carried by intents and events toward the agent. */
@@ -333,7 +349,7 @@ export type AuthAgentReactionTyped =
 `,
     ],
     [
-      "auth/services/auth.api.ts",
+      "features/auth/services/auth.api.ts",
       `import { Injectable } from '@angular/core';
 import { Observable, delay, of } from 'rxjs';
 
@@ -355,7 +371,7 @@ export class AuthApi {
 `,
     ],
     [
-      "auth/omega/auth.constants.ts",
+      "features/auth/omega/auth.constants.ts",
       `export const AUTH_SESSION_KEY = 'omega.auth';
 
 export const NAVIGATOR_EVENT = 'navigator';
@@ -376,7 +392,7 @@ export const AuthAgentAction = {
 `,
     ],
     [
-      "auth/omega/auth.flow.ts",
+      "features/auth/omega/auth.flow.ts",
       `import { OmegaChannel, OmegaEvent, OmegaFlow, OmegaIntent } from 'omega-angular';
 
 import type { AuthRemoteLoginPayload } from '../models/auth.models';
@@ -412,7 +428,7 @@ export class AuthFlow extends OmegaFlow {
 `,
     ],
     [
-      "auth/omega/auth.behavior.ts",
+      "features/auth/omega/auth.behavior.ts",
       `import {
   OmegaAgentBehaviorContext,
   OmegaAgentBehaviorEngine,
@@ -453,7 +469,7 @@ export class AuthSessionBehavior extends OmegaAgentBehaviorEngine {
 `,
     ],
     [
-      "auth/omega/auth.agent.ts",
+      "features/auth/omega/auth.agent.ts",
       `import { firstValueFrom } from 'rxjs';
 
 import { OmegaAgent, OmegaAgentReaction, OmegaChannel } from 'omega-angular';
@@ -509,7 +525,7 @@ export function createAuthAgent(channel: OmegaChannel, authApi: AuthApi): OmegaA
 `,
     ],
     [
-      "auth/omega/auth.session.ts",
+      "features/auth/omega/auth.session.ts",
       `import { AUTH_SESSION_KEY } from './auth.constants';
 
 export const AuthSession = {
@@ -537,7 +553,7 @@ export const AuthSession = {
 `,
     ],
     [
-      "auth/views/auth-page.component.ts",
+      "features/auth/views/auth-page.component.ts",
       `import { Component, DestroyRef, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { OmegaChannel, OmegaFlowManager, OmegaIntent } from 'omega-angular';
@@ -592,7 +608,7 @@ export class AuthPageComponent {
 `,
     ],
     [
-      "auth/views/auth-page.component.html",
+      "features/auth/views/auth-page.component.html",
       `<div class="card">
   <h1>Sign in</h1>
   <p class="hint">Omega starter — use <code>demo</code> / <code>demo</code></p>
@@ -622,7 +638,7 @@ export class AuthPageComponent {
 `,
     ],
     [
-      "auth/views/auth-page.component.css",
+      "features/auth/views/auth-page.component.css",
       `:host {
   display: block;
   max-width: 22rem;
@@ -695,7 +711,7 @@ code {
 `,
     ],
     [
-      "home-page/home-page.component.ts",
+      "features/home/home-page.component.ts",
       `import { Component, inject, signal } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { OmegaChannel } from 'omega-angular';
@@ -729,7 +745,7 @@ export class HomePageComponent {
 `,
     ],
     [
-      "home-page/home-page.component.html",
+      "features/home/home-page.component.html",
       `<div class="wrap">
   <h1>Home</h1>
   <p>Welcome, <strong>{{ displayName() }}</strong>.</p>
@@ -744,7 +760,7 @@ export class HomePageComponent {
 `,
     ],
     [
-      "home-page/home-page.component.css",
+      "features/home/home-page.component.css",
       `:host {
   display: block;
   max-width: 36rem;

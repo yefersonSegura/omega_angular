@@ -20,7 +20,7 @@ Monorepo for **Omega Angular** (`omega-angular`): an Angular/RxJS library for th
 | `docs/` | Public **documentation site** (VitePress): guides, schematics overview, ESLint summary. |
 | `scripts/patch-omega-angular-package.mjs` | After `ng build omega-angular`, adds `exports` to `dist/omega-angular/package.json` for `./eslint-plugin/index.cjs` and `./eslint/config-omega.mjs`. |
 
-**Compatibility:** `omega-angular` declares peers for **Angular ≥ 14** and **RxJS ≥ 7.4**. The `example` app tracks the same Angular version as this repository.
+**Compatibility:** `omega-angular` declares peers for **Angular ≥ 17** and **RxJS ≥ 7.4**. The `example` app tracks the same Angular version as this repository.
 
 ---
 
@@ -88,9 +88,9 @@ ng generate omega-angular:ecosystem --force
 
 **By default**, `ng add omega-angular` and **`ng generate omega-angular:ecosystem`** (without `--minimal`) also scaffold a **login + home** starter aligned with the Omega pattern:
 
-- **`src/app/auth/`** — `AuthFlow`, agent, mock **`AuthApi`** (`demo` / `demo`), login view.
-- **`src/app/home-page/`** — home view with resolver-driven session display and logout via the channel.
-- **`omega-setup.ts`** — `AuthFlow` + `createAuthAgent`, **`authGuard`**, **`homePageResolver`**, router bridge, **`omegaSetupProviders`**.
+- **`src/app/features/auth/`** — `AuthFlow`, agent, mock **`AuthApi`** (`demo` / `demo`), login view.
+- **`src/app/features/home/`** — home view with resolver-driven session display and logout via the channel.
+- **`omega-setup.ts`** — `AuthFlow` + `createAuthAgent`, **`authGuard`**, **`homePageResolver`**, router bridge, **`omegaSetupProviders`**, and inspector/logger defaults.
 - **`app.routes.ts`** — if missing, it is created; if it exists and is **empty** (`export const routes: Routes = [];`), it is replaced with routes for `/login` and `/home`. If you already defined **`path: 'login'`**, routes are left unchanged and a warning may remind you to wire routes manually.
 
 **Opt out of the starter** (only the minimal omega bootstrap + `app.config` merge — empty `createFlows`, no auth files):

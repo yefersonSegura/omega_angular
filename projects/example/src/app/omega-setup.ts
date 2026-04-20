@@ -9,37 +9,40 @@ import {
   type EnvironmentProviders,
   inject,
   makeEnvironmentProviders,
-  type Provider,
   provideEnvironmentInitializer,
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Router, type CanActivateFn, type ResolveFn } from '@angular/router';
-import { OmegaChannel, provideOmega, type OmegaProvideOptions } from 'omega-angular';
+import {
+  OmegaChannel,
+  provideOmega,
+  provideOmegaInspector,
+  provideOmegaInspectorFloatingUi,
+  type OmegaProvideOptions,
+} from 'omega-angular';
 
-import { AuthApi } from './auth/services/auth.api';
-import { AUTH_SESSION_KEY, NAVIGATOR_EVENT } from './auth/omega/auth.constants';
-import { createAuthAgent } from './auth/omega/auth.agent';
-import { AuthFlow } from './auth/omega/auth.flow';
-import { AuthSession } from './auth/omega/auth.session';
-import { FacturaApi } from './factura/services/factura.api';
-import { createFacturaAgent } from './factura/omega/factura.agent';
-import { FacturaFlow } from './factura/omega/factura.flow';
-import { PedidosApi } from './pedidos/services/pedidos.api';
-import { createPedidosAgent } from './pedidos/omega/pedidos.agent';
-import { PedidosFlow } from './pedidos/omega/pedidos.flow';
-import { ClienteApi } from './cliente/services/cliente.api';
-import { createClienteAgent } from './cliente/omega/cliente.agent';
-import { ClienteFlow } from './cliente/omega/cliente.flow';
+import { AuthApi } from './features/auth/services/auth.api';
+import { AUTH_SESSION_KEY, NAVIGATOR_EVENT } from './features/auth/omega/auth.constants';
+import { createAuthAgent } from './features/auth/omega/auth.agent';
+import { AuthFlow } from './features/auth/omega/auth.flow';
+import { AuthSession } from './features/auth/omega/auth.session';
+import { FacturaApi } from './features/factura/services/factura.api';
+import { createFacturaAgent } from './features/factura/omega/factura.agent';
+import { FacturaFlow } from './features/factura/omega/factura.flow';
+import { AppStateStore } from './shared/state/app-state.store';
 
-export { AUTH_SESSION_KEY } from './auth/omega/auth.constants';
+export { AUTH_SESSION_KEY } from './features/auth/omega/auth.constants';
+
+function logOmegaError(scope: string, error: unknown, extra?: Record<string, unknown>): void {
+  // Centralized error sink for internal Omega runtime issues in the example app.
+  console.error(`[Omega][${scope}]`, { error, ...(extra ?? {}) });
+}
 
 function createAppOmegaOptions(): OmegaProvideOptions {
   return {
     createFlows: (channel: OmegaChannel) => [
       new AuthFlow(channel),
       new FacturaFlow(channel),
-      new PedidosFlow(channel),
-      new ClienteFlow(channel),
       // más flows: new OrdersFlow(channel), …
     ],
     bootstrap: ({ manager }) => {
@@ -48,13 +51,14 @@ function createAppOmegaOptions(): OmegaProvideOptions {
     createAgents: ({ channel }) => {
       createAuthAgent(channel, inject(AuthApi));
       createFacturaAgent(channel, inject(FacturaApi));
-      createPedidosAgent(channel, inject(PedidosApi));
-      createClienteAgent(channel, inject(ClienteApi));
+    },
+    onChannelEmitError: (error, stack) => {
+      logOmegaError('channel.emit', error, { stack });
     },
   };
 }
 
-function provideOmegaApp(): Provider[] {
+function provideOmegaApp(): ReturnType<typeof provideOmega> {
   return provideOmega(createAppOmegaOptions());
 }
 
@@ -78,6 +82,20 @@ function provideOmegaNavigationBridge(): EnvironmentProviders {
   ]);
 }
 
+/** Global state bridge: every Omega event updates a shared signal store. */
+function provideOmegaGlobalStateBridge(): EnvironmentProviders {
+  return makeEnvironmentProviders([
+    provideEnvironmentInitializer(() => {
+      const channel = inject(OmegaChannel);
+      const store = inject(AppStateStore);
+      const destroyRef = inject(DestroyRef);
+      channel.events.pipe(takeUntilDestroyed(destroyRef)).subscribe((event) => {
+        store.applyOmegaEvent(event);
+      });
+    }),
+  ]);
+}
+
 export const authGuard: CanActivateFn = () => {
   const router = inject(Router);
   return AuthSession.isAuthed() || router.parseUrl('/login');
@@ -90,4 +108,15 @@ export const homePageResolver: ResolveFn<{ displayName: string; sessionKey: stri
 });
 
 /** Incluir en `app.config.ts`: canal, manager, flows, agents y puentes (p. ej. router). */
-export const omegaSetupProviders = [provideOmegaApp(), provideOmegaNavigationBridge()] as const;
+export const omegaSetupProviders = [
+  ...provideOmegaInspector({
+    broadcastChannel: true,
+    consoleLog: true,
+    exposeGlobal: true,
+  }),
+  ...provideOmegaApp(),
+  provideOmegaNavigationBridge(),
+  provideOmegaGlobalStateBridge(),
+  /** Inspector UI: shortcut toggle overlay (Ctrl+Shift+O, no `/inspector` route). */
+  ...provideOmegaInspectorFloatingUi(),
+] as const;

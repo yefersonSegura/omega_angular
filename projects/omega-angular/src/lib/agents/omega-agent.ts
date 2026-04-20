@@ -5,6 +5,15 @@ import type { OmegaEvent } from '../core/events/omega-event';
 
 import type { OmegaAgentBehaviorEngine, OmegaAgentReactionHandler } from './omega-agent-behavior';
 
+export interface OmegaAgentErrorContext {
+  readonly phase: 'evaluate' | 'reaction';
+  readonly event: OmegaEvent;
+  readonly behavior?: OmegaAgentBehaviorEngine;
+  readonly reaction?: unknown;
+}
+
+export type OmegaAgentErrorHandler = (error: unknown, context: OmegaAgentErrorContext) => void;
+
 /**
  * Side-effect coordinator that listens to **all** {@link OmegaEvent} values on a channel
  * and runs one or more {@link OmegaAgentBehaviorEngine} instances per tick.
@@ -28,6 +37,7 @@ export class OmegaAgent {
     private readonly channel: OmegaChannel,
     private readonly behaviors: readonly OmegaAgentBehaviorEngine[],
     private readonly onReaction: OmegaAgentReactionHandler,
+    private readonly onError?: OmegaAgentErrorHandler,
   ) {
     this.subscription = this.channel.events.subscribe((event) => this.tick(event));
   }
@@ -35,9 +45,17 @@ export class OmegaAgent {
   private tick(event: OmegaEvent): void {
     const ctx = { event };
     for (const behavior of this.behaviors) {
-      const reaction = behavior.evaluate(ctx);
-      if (reaction) {
-        this.onReaction(reaction);
+      try {
+        const reaction = behavior.evaluate(ctx);
+        if (reaction) {
+          try {
+            this.onReaction(reaction);
+          } catch (error) {
+            this.onError?.(error, { phase: 'reaction', event, behavior, reaction });
+          }
+        }
+      } catch (error) {
+        this.onError?.(error, { phase: 'evaluate', event, behavior });
       }
     }
   }

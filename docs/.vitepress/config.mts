@@ -80,6 +80,7 @@ export default defineConfig({
           { text: 'Intents, flows & manager', link: '/guide/intents-flows-manager' },
           { text: 'Agents & behaviors', link: '/guide/agents-behaviors' },
           { text: 'Navigation & Router', link: '/guide/navigation-router' },
+          { text: 'Omega Inspector', link: '/guide/inspector' },
           { text: 'Wire names & feature layout', link: '/guide/wire-names-and-layout' },
           { text: 'Cookbook', link: '/guide/cookbook' },
           { text: 'Testing', link: '/guide/testing' },

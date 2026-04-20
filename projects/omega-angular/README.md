@@ -28,7 +28,7 @@ ng generate omega-angular:ecosystem
 ng generate omega-angular:ecosystem --project=myApp --force
 ```
 
-By default this also adds the **login + home** starter (auth folder, `home-page`, routes). Use **`--minimal`** for the previous “empty flows only” bootstrap.
+By default this also adds the **login + home** starter (`features/auth`, `features/home`, routes), plus inspector/logger wiring in `omega-setup.ts`. Use **`--minimal`** for the previous “empty flows only” bootstrap.
 
 **Revert `ng add` (builders, ESLint flat config, `app.config` providers):**
 

@@ -1,8 +1,11 @@
-import { APP_INITIALIZER, Provider } from '@angular/core';
+import { Optional, Provider, inject, provideAppInitializer } from '@angular/core';
 
 import { OmegaChannel } from '../core/channel/omega-channel';
+import type { OmegaEmitErrorHandler } from '../core/channel/omega-channel';
 import type { OmegaFlow } from '../flows/omega-flow';
 import { OmegaFlowManager } from '../flows/omega-flow-manager';
+import type { OmegaFlowManagerInstrumentation } from '../inspector/omega-flow-manager-instrumentation';
+import { OMEGA_FLOW_MANAGER_INSTRUMENTATION } from '../inspector/omega-flow-manager-instrumentation';
 
 /**
  * Stable handles available during {@link OmegaProvideOptions.bootstrap} and
@@ -34,13 +37,20 @@ export interface OmegaProvideOptions {
    */
   createFlows: (channel: OmegaChannel) => readonly OmegaFlow[];
   /**
+   * Optional sink for channel emit errors (disposed channel emit, observer errors, etc).
+   *
+   * @remarks
+   * Use this to centralize diagnostics (`console.error`, telemetry) for internal channel failures.
+   */
+  onChannelEmitError?: OmegaEmitErrorHandler;
+  /**
    * Optional one-shot hook after flows are {@link OmegaFlowManager.registerFlow registered}
    * on the manager but before the application finishes bootstrapping.
    *
    * @remarks
    * Typical uses: {@link OmegaFlowManager.switchTo}, {@link OmegaFlowManager.activate},
    * seeding session state, or dispatching an initial {@link OmegaIntent}.
-   * Runs inside an {@link APP_INITIALIZER}; keep work fast and avoid blocking UI.
+   * Runs inside Angular app initialization; keep work fast and avoid blocking UI.
    */
   bootstrap?: (ctx: OmegaRuntimeContext) => void;
   /**
@@ -48,7 +58,7 @@ export interface OmegaProvideOptions {
    * that are not modeled as flows.
    *
    * @remarks
-   * Runs in the same {@link APP_INITIALIZER} as `bootstrap`, after `bootstrap` if both are set.
+   * Runs in the same app-initialization hook as `bootstrap`, after `bootstrap` if both are set.
    * Prefer constructing agents here so they share the same channel/manager as flows.
    */
   createAgents?: (ctx: OmegaRuntimeContext) => void;
@@ -63,36 +73,35 @@ export interface OmegaProvideOptions {
  * @returns A {@link Provider} array suitable for `ApplicationConfig.providers` or `NgModule.providers`.
  *
  * @remarks
- * Registration order: `OmegaChannel` → `OmegaFlowManager` (with flows) → `APP_INITIALIZER`
- * that invokes `bootstrap` then `createAgents`. Consumers on **Angular 14+** can spread
+ * Registration order: `OmegaChannel` → `OmegaFlowManager` (with flows) → app initializer
+ * that invokes `bootstrap` then `createAgents`. Consumers on **Angular 17+** can spread
  * the result into `providers: [...]`.
  *
  * @see {@link OmegaProvideOptions}
  */
-export function provideOmega(options: OmegaProvideOptions): Provider[] {
+export function provideOmega(options: OmegaProvideOptions): Array<Provider | ReturnType<typeof provideAppInitializer>> {
   return [
-    { provide: OmegaChannel, useFactory: () => new OmegaChannel() },
+    {
+      provide: OmegaChannel,
+      useFactory: () => new OmegaChannel({ onEmitError: options.onChannelEmitError }),
+    },
     {
       provide: OmegaFlowManager,
-      useFactory: (channel: OmegaChannel) => {
-        const manager = new OmegaFlowManager(channel);
+      useFactory: (channel: OmegaChannel, instrumentation?: OmegaFlowManagerInstrumentation) => {
+        const manager = new OmegaFlowManager(channel, instrumentation);
         for (const flow of options.createFlows(channel)) {
           manager.registerFlow(flow);
         }
         return manager;
       },
-      deps: [OmegaChannel],
+      deps: [OmegaChannel, [new Optional(), OMEGA_FLOW_MANAGER_INSTRUMENTATION]],
     },
-    {
-      provide: APP_INITIALIZER,
-      useFactory:
-        (channel: OmegaChannel, manager: OmegaFlowManager) => () => {
-          const ctx: OmegaRuntimeContext = { channel, manager };
-          options.bootstrap?.(ctx);
-          options.createAgents?.(ctx);
-        },
-      deps: [OmegaChannel, OmegaFlowManager],
-      multi: true,
-    },
+    provideAppInitializer(() => {
+      const channel = inject(OmegaChannel);
+      const manager = inject(OmegaFlowManager);
+      const ctx: OmegaRuntimeContext = { channel, manager };
+      options.bootstrap?.(ctx);
+      options.createAgents?.(ctx);
+    }),
   ];
 }

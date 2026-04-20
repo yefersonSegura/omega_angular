@@ -1,6 +1,7 @@
 import { OmegaChannel } from '../core/channel/omega-channel';
 import type { OmegaEvent } from '../core/events/omega-event';
 import { OmegaIntent } from '../core/semantics/omega-intent';
+import type { OmegaFlowManagerInstrumentation } from '../inspector/omega-flow-manager-instrumentation';
 
 import type { OmegaFlow } from './omega-flow';
 
@@ -26,8 +27,12 @@ export class OmegaFlowManager {
   /**
    * @param channel — Channel whose `events` stream this manager subscribes to for its whole lifetime.
    *   The subscription is not unsubscribed by the library; align manager and channel lifecycle with the app.
+   * @param instrumentation — Optional debug hooks (e.g. Omega Inspector); omit in production if unused.
    */
-  constructor(private readonly channel: OmegaChannel) {
+  constructor(
+    private readonly channel: OmegaChannel,
+    private readonly instrumentation?: OmegaFlowManagerInstrumentation,
+  ) {
     this.channel.events.subscribe((event) => this.forwardEventToActiveFlows(event));
   }
 
@@ -49,6 +54,17 @@ export class OmegaFlowManager {
    */
   registerFlow(flow: OmegaFlow): void {
     this.flows.set(flow.id, flow);
+    this.instrumentation?.onFlowRegistered?.(flow.id);
+  }
+
+  /** Registered flow ids (for devtools / inspector). */
+  getRegisteredFlowIds(): readonly string[] {
+    return [...this.flows.keys()].sort();
+  }
+
+  /** Currently active flow ids (for devtools / inspector). */
+  getActiveFlowIds(): readonly string[] {
+    return [...this.activeFlowIds];
   }
 
   /**
@@ -65,6 +81,7 @@ export class OmegaFlowManager {
    */
   activate(flowId: string): void {
     this.activeFlowIds.add(flowId);
+    this.instrumentation?.onActiveSetChanged?.(this.getActiveFlowIds());
   }
 
   /**
@@ -74,6 +91,7 @@ export class OmegaFlowManager {
    */
   deactivate(flowId: string): void {
     this.activeFlowIds.delete(flowId);
+    this.instrumentation?.onActiveSetChanged?.(this.getActiveFlowIds());
   }
 
   /**
@@ -84,6 +102,7 @@ export class OmegaFlowManager {
   switchTo(flowId: string): void {
     this.activeFlowIds.clear();
     this.activeFlowIds.add(flowId);
+    this.instrumentation?.onActiveSetChanged?.(this.getActiveFlowIds());
   }
 
   /**
@@ -92,6 +111,8 @@ export class OmegaFlowManager {
    * @param intent — Typically created with {@link OmegaIntent.fromName}.
    */
   handleIntent(intent: OmegaIntent): void {
+    const active = this.getActiveFlowIds();
+    this.instrumentation?.onIntentHandled?.(intent, active);
     for (const id of this.activeFlowIds) {
       this.flows.get(id)?.onIntent(intent);
     }

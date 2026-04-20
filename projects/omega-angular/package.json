@@ -16,8 +16,8 @@
     "save": "dependencies"
   },
   "peerDependencies": {
-    "@angular/common": ">=14.0.0",
-    "@angular/core": ">=14.0.0",
+    "@angular/common": ">=17.0.0",
+    "@angular/core": ">=17.0.0",
     "@eslint/js": ">=9.0.0",
     "eslint": ">=9.0.0",
     "rxjs": ">=7.4.0",

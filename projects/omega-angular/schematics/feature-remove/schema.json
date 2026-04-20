@@ -1,12 +1,12 @@
 {
   "$schema": "http://json-schema.org/schema",
-  "$id": "omega-angular-feature",
-  "title": "Omega Angular feature (flow + agent + omega/)",
+  "$id": "omega-angular-feature-remove",
+  "title": "Remove one Omega feature",
   "type": "object",
   "properties": {
     "name": {
       "type": "string",
-      "description": "Kebab-case or single name segment (e.g. cliente, order-item). Creates under current terminal folder when running inside src/app (otherwise defaults to src/app/<name>).",
+      "description": "Feature folder name (e.g. cliente, order-item).",
       "$default": {
         "$source": "argv",
         "index": 0
@@ -18,11 +18,11 @@
     },
     "path": {
       "type": "string",
-      "description": "URL segment for lazy route (default: plural of name: cliente → clientes)."
+      "description": "Route path to remove from app.routes.ts (default: pluralized name)."
     },
     "parentPath": {
       "type": "string",
-      "description": "Parent route path where the new route should be added under `children` (e.g. admin)."
+      "description": "Parent route path where the child route should be removed from `children` (e.g. admin)."
     },
     "skipRoute": {
       "type": "boolean",
@@ -31,7 +31,7 @@
     },
     "skipOmegaSetup": {
       "type": "boolean",
-      "description": "Do not merge imports/flows/agents in omega-setup.ts.",
+      "description": "Do not change omega-setup.ts.",
       "default": false
     }
   },

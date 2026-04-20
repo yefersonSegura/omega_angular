@@ -1,4 +1,12 @@
 "use strict";
+const fs = require("node:fs");
+const path = require("node:path");
+let ts = null;
+try {
+  ts = require("typescript");
+} catch {
+  ts = null;
+}
 
 /**
  * @param {string} raw
@@ -46,6 +54,57 @@ function trimLeadingSlash(p) {
   return p.replace(/^\//, "");
 }
 
+function toPosix(p) {
+  return String(p || "").replace(/\\/g, "/");
+}
+
+function findWorkspaceRootFromCwd(cwd) {
+  let current = path.resolve(cwd);
+  while (true) {
+    if (fs.existsSync(path.join(current, "angular.json"))) {
+      return current;
+    }
+    const parent = path.dirname(current);
+    if (parent === current) {
+      return null;
+    }
+    current = parent;
+  }
+}
+
+function isSubPathOf(childPath, parentPath) {
+  if (!childPath || !parentPath) {
+    return false;
+  }
+  const rel = path.posix.relative(parentPath, childPath);
+  return rel === "" || (!rel.startsWith("..") && !path.isAbsolute(rel));
+}
+
+function formatTypeScriptFile(content, virtualFileName) {
+  if (!ts) {
+    return content;
+  }
+  try {
+    const sourceFile = ts.createSourceFile(
+      virtualFileName || "file.ts",
+      content,
+      ts.ScriptTarget.Latest,
+      true,
+      ts.ScriptKind.TS,
+    );
+    const printed = ts
+      .createPrinter({ newLine: ts.NewLineKind.LineFeed })
+      .printFile(sourceFile);
+    return printed.endsWith("\n") ? printed : `${printed}\n`;
+  } catch {
+    return content;
+  }
+}
+
+function upperSnake(raw) {
+  return featureFolderName(raw).replace(/-/g, "_").toUpperCase();
+}
+
 function findDefaultApplicationProject(workspace) {
   const projects = workspace.projects || {};
   for (const n of Object.keys(projects)) {
@@ -57,7 +116,7 @@ function findDefaultApplicationProject(workspace) {
 }
 
 /**
- * @param {{ name: string; project?: string; path?: string; skipRoute?: boolean; skipOmegaSetup?: boolean }} options
+ * @param {{ name: string; project?: string; path?: string; parentPath?: string; skipRoute?: boolean; skipOmegaSetup?: boolean }} options
  * @returns {import('@angular-devkit/schematics').Rule}
  */
 function feature(options) {
@@ -94,11 +153,35 @@ function feature(options) {
     const root = (proj.root || "").replace(/\\/g, "/").replace(/\/$/, "");
     const sourceRoot = (proj.sourceRoot || (root ? `${root}/src` : "src")).replace(/\\/g, "/");
     const appDir = `${sourceRoot}/app`;
-    const base = `/${appDir}/${folder}`.replace(/\/+/g, "/");
+    const workspaceRoot = findWorkspaceRootFromCwd(process.cwd());
+    const cwdRelativeToWorkspace = workspaceRoot
+      ? toPosix(path.relative(workspaceRoot, process.cwd()))
+      : "";
+    const cwdInsideApp = isSubPathOf(cwdRelativeToWorkspace, appDir);
+    const appRelativeCwd = cwdInsideApp
+      ? path.posix.relative(appDir, cwdRelativeToWorkspace)
+      : "";
+    const featureContainer = appRelativeCwd && appRelativeCwd !== "." ? appRelativeCwd : "";
 
     const skipRoute = options.skipRoute === true;
     const skipOmegaSetup = options.skipOmegaSetup === true;
     const routePath = (options.path && String(options.path).trim()) || defaultRoutePath(folder);
+    const parentPath =
+      options.parentPath && String(options.parentPath).trim() !== ""
+        ? String(options.parentPath).trim()
+        : null;
+    const parentFolder = parentPath ? featureFolderName(parentPath) : null;
+    const baseContainerParts = featureContainer
+      ? featureContainer.split("/").filter(Boolean)
+      : [];
+    const containerParts = [...baseContainerParts];
+    if (parentFolder && containerParts[containerParts.length - 1] !== parentFolder) {
+      containerParts.push(parentFolder);
+    }
+    const featureImportRoot = [...containerParts, folder].join("/");
+    const parentImportRoot = parentFolder ? [...baseContainerParts, parentFolder].join("/") : null;
+    const parentRoutesExport = parentFolder ? `${upperSnake(parentFolder)}_ROUTES` : null;
+    const base = `/${appDir}/${featureImportRoot}`.replace(/\/+/g, "/");
 
     const flowClass = `${Name}Flow`;
     const agentFn = `create${Name}Agent`;
@@ -157,7 +240,14 @@ function feature(options) {
 
     if (!skipOmegaSetup && tree.exists(omegaSetupPath)) {
       const before = tree.read(omegaSetupPath).toString("utf-8");
-      const after = mergeOmegaSetup(before, { folder, Name, flowClass, agentFn, apiClass });
+      const after = mergeOmegaSetup(before, {
+        folder,
+        Name,
+        flowClass,
+        agentFn,
+        apiClass,
+        featureImportRoot,
+      });
       if (after !== before) {
         tree.overwrite(omegaSetupPath, after);
         context.logger.info(`omega-angular: merged ${flowClass} + ${agentFn} into ${trimLeadingSlash(omegaSetupPath)}.`);
@@ -169,20 +259,56 @@ function feature(options) {
     }
 
     if (!skipRoute && tree.exists(appRoutesPath)) {
+      if (parentPath && parentFolder && parentImportRoot && parentRoutesExport) {
+        const parentRoutesPath = `/${appDir}/${parentImportRoot}/${parentFolder}.routes.ts`.replace(/\/+/g, "/");
+        const defaultParentRoutes = `import { Routes } from '@angular/router';
+import { authGuard } from '../../omega-setup';
+
+export const ${parentRoutesExport}: Routes = [];
+`;
+        if (!tree.exists(parentRoutesPath)) {
+          tree.create(parentRoutesPath, defaultParentRoutes);
+        }
+        const prBefore = tree.read(parentRoutesPath).toString("utf-8");
+        const prAfter = upsertParentRoutesFile(prBefore, {
+          routePath,
+          folder,
+          pageClass,
+        });
+        const prFormatted = formatTypeScriptFile(prAfter, `${parentFolder}.routes.ts`);
+        if (prFormatted !== prBefore) {
+          tree.overwrite(parentRoutesPath, prFormatted);
+          context.logger.info(
+            `omega-angular: updated parent child routes in ${trimLeadingSlash(parentRoutesPath)}.`,
+          );
+        }
+      }
+
       const rb = tree.read(appRoutesPath).toString("utf-8");
-      const ra = mergeAppRoutes(rb, {
-        routePath,
-        folder,
-        pageClass,
-      });
-      if (ra !== rb) {
-        tree.overwrite(appRoutesPath, ra);
+      const ra =
+        parentPath && parentFolder && parentImportRoot && parentRoutesExport
+          ? upsertParentLoadChildrenRoute(rb, {
+              parentPath,
+              parentFolder,
+              parentImportRoot,
+              parentRoutesExport,
+            })
+          : mergeAppRoutes(rb, {
+              routePath,
+              parentPath,
+              folder,
+              pageClass,
+              featureImportRoot,
+            });
+      const raf = formatTypeScriptFile(ra, "app.routes.ts");
+      if (raf !== rb) {
+        tree.overwrite(appRoutesPath, raf);
         context.logger.info(
           `omega-angular: registered lazy route "${routePath}" in ${trimLeadingSlash(appRoutesPath)}.`,
         );
-      } else if (!ra.includes(`path: '${routePath}'`)) {
+      } else if (!parentPath && !raf.includes(`path: '${routePath}'`) && !raf.includes(`path: "${routePath}"`)) {
         context.logger.warn(
-          `omega-angular: could not auto-merge ${trimLeadingSlash(appRoutesPath)} — add a route to ./${folder}/views/${folder}-page.component manually.`,
+          `omega-angular: could not auto-merge ${trimLeadingSlash(appRoutesPath)} — add a route to ./${featureImportRoot}/views/${folder}-page.component manually.`,
         );
       }
     } else if (skipRoute) {
@@ -195,27 +321,32 @@ function feature(options) {
 
 /**
  * @param {string} content
- * @param {{ folder: string; Name: string; flowClass: string; agentFn: string; apiClass: string }} p
+ * @param {{ folder: string; Name: string; flowClass: string; agentFn: string; apiClass: string; featureImportRoot: string }} p
  */
 function mergeOmegaSetup(content, p) {
   if (content.includes(`import { ${p.flowClass} }`)) {
     return content;
   }
 
+  const featureRoot = p.featureImportRoot || p.folder;
   const importBlock =
-    `import { ${p.apiClass} } from './${p.folder}/services/${p.folder}.api';\n` +
-    `import { ${p.agentFn} } from './${p.folder}/omega/${p.folder}.agent';\n` +
-    `import { ${p.flowClass} } from './${p.folder}/omega/${p.folder}.flow';\n`;
+    `import { ${p.apiClass} } from './${featureRoot}/services/${p.folder}.api';\n` +
+    `import { ${p.agentFn} } from './${featureRoot}/omega/${p.folder}.agent';\n` +
+    `import { ${p.flowClass} } from './${featureRoot}/omega/${p.folder}.flow';\n`;
 
   let out = content;
-  if (!out.includes(`from './${p.folder}/omega/${p.folder}.flow'`)) {
+  if (!out.includes(`from './${featureRoot}/omega/${p.folder}.flow'`)) {
     const afterAuthSession =
-      /(import \{ AuthSession \} from '\.\/auth\/omega\/auth\.session';\n)/;
+      /(import \{ AuthSession \} from '\.\/features\/auth\/omega\/auth\.session';\n)/;
     if (afterAuthSession.test(out)) {
       out = out.replace(afterAuthSession, `$1${importBlock}`);
     } else {
-      const anchorImport = /^(import .*\n)+/m;
-      out = out.replace(anchorImport, (m) => m + importBlock);
+      const afterOmegaAngularImport = /(import[\s\S]*?from 'omega-angular';\n)/;
+      if (afterOmegaAngularImport.test(out)) {
+        out = out.replace(afterOmegaAngularImport, `$1\n${importBlock}`);
+      } else {
+        out = `${importBlock}${out}`;
+      }
     }
   }
 
@@ -250,10 +381,69 @@ function mergeOmegaSetup(content, p) {
 
 /**
  * @param {string} content
- * @param {{ routePath: string; folder: string; pageClass: string }} p
+ * @param {{ routePath: string; parentPath?: string | null; folder: string; pageClass: string; featureImportRoot: string }} p
  */
 function mergeAppRoutes(content, p) {
   if (content.includes(`path: '${p.routePath}'`)) {
+    return content;
+  }
+  const featureRoot = p.featureImportRoot || p.folder;
+  const block = `  {
+    path: '${p.routePath}',
+    loadComponent: () =>
+      import('./${featureRoot}/views/${p.folder}-page.component').then((m) => m.${p.pageClass}),
+    canActivate: [authGuard],
+  },
+`;
+
+  if (p.parentPath) {
+    const parentMerge = mergeIntoParentChildren(content, p.parentPath, p.routePath, block);
+    if (parentMerge.merged) {
+      return parentMerge.content;
+    }
+    const parentInsert = insertNewParentWithChild(content, p.parentPath, block);
+    if (parentInsert.merged) {
+      return parentInsert.content;
+    }
+  }
+
+  const replaced = content.replace(
+    /(\s*)\{\s*path:\s*'\*\*'/,
+    `${block}$1{ path: '**'`,
+  );
+  return replaced;
+}
+
+function upsertParentLoadChildrenRoute(content, p) {
+  const loadChildrenLine =
+    `    loadChildren: () => import('./${p.parentImportRoot}/${p.parentFolder}.routes').then((m) => m.${p.parentRoutesExport}),\n`;
+
+  const parentBounds = findTopLevelRouteObjectByPath(content, p.parentPath);
+  if (parentBounds) {
+    let parentObj = content.slice(parentBounds.start, parentBounds.end + 1);
+    parentObj = parentObj.replace(/\n\s*children\s*:\s*\[[\s\S]*?\],?/m, "");
+    if (parentObj.includes("loadChildren:")) {
+      parentObj = parentObj.replace(
+        /\n\s*loadChildren:\s*\(\)\s*=>\s*import\([\s\S]*?,\n/m,
+        `\n${loadChildrenLine}`,
+      );
+    } else {
+      parentObj = parentObj.replace(/\n\s*\}/m, `\n${loadChildrenLine}  }`);
+    }
+    return content.slice(0, parentBounds.start) + parentObj + content.slice(parentBounds.end + 1);
+  }
+
+  const block = `  {
+    path: '${p.parentPath}',
+    canActivate: [authGuard],
+${loadChildrenLine}  },
+`;
+  return content.replace(/(\s*)\{\s*path:\s*'\*\*'/, `${block}$1{ path: '**'`);
+}
+
+function upsertParentRoutesFile(content, p) {
+  const routePathEsc = p.routePath.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  if (new RegExp(`path\\s*:\\s*['"]${routePathEsc}['"]`).test(content)) {
     return content;
   }
   const block = `  {
@@ -263,11 +453,120 @@ function mergeAppRoutes(content, p) {
     canActivate: [authGuard],
   },
 `;
-  const replaced = content.replace(
-    /(\s*)\{\s*path:\s*'\*\*'/,
-    `${block}$1{ path: '**'`,
-  );
-  return replaced;
+  return content.replace(/\]\s*;?\s*$/m, `${block}];`);
+}
+
+function insertNewParentWithChild(content, parentPath, routeBlock) {
+  const childBlock = routeBlock.replace(/^  /gm, "      ");
+  const parentBlock = `  {
+    path: '${parentPath}',
+    canActivate: [authGuard],
+    children: [
+${childBlock}    ],
+  },
+`;
+  const replaced = content.replace(/(\s*)\{\s*path:\s*'\*\*'/, `${parentBlock}$1{ path: '**'`);
+  if (replaced === content) {
+    return { merged: false, content };
+  }
+  return { merged: true, content: replaced };
+}
+
+function findMatchingClose(text, start, openChar, closeChar) {
+  let depth = 0;
+  for (let i = start; i < text.length; i += 1) {
+    const ch = text[i];
+    if (ch === openChar) {
+      depth += 1;
+    } else if (ch === closeChar) {
+      depth -= 1;
+      if (depth === 0) {
+        return i;
+      }
+    }
+  }
+  return -1;
+}
+
+function findTopLevelRouteObjectByPath(content, targetPath) {
+  const decl = content.indexOf("export const routes");
+  if (decl === -1) {
+    return null;
+  }
+  const arrStart = content.indexOf("[", decl);
+  if (arrStart === -1) {
+    return null;
+  }
+  const arrEnd = findMatchingClose(content, arrStart, "[", "]");
+  if (arrEnd === -1) {
+    return null;
+  }
+
+  const pathRe = new RegExp(`path\\s*:\\s*['"]${targetPath.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}['"]\\s*,?`);
+  let i = arrStart + 1;
+  while (i < arrEnd) {
+    if (content[i] === "{") {
+      const objStart = i;
+      const objEnd = findMatchingClose(content, i, "{", "}");
+      if (objEnd === -1 || objEnd > arrEnd) {
+        return null;
+      }
+      const objectText = content.slice(objStart, objEnd + 1);
+      if (pathRe.test(objectText)) {
+        return { start: objStart, end: objEnd };
+      }
+      i = objEnd + 1;
+      continue;
+    }
+    i += 1;
+  }
+  return null;
+}
+
+function mergeIntoParentChildren(content, parentPath, routePath, routeBlock) {
+  const parentBounds = findTopLevelRouteObjectByPath(content, parentPath);
+  if (!parentBounds) {
+    return { merged: false, content };
+  }
+
+  const parentText = content.slice(parentBounds.start, parentBounds.end + 1);
+  const childPathRe = new RegExp(`path\\s*:\\s*['"]${routePath.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}['"]\\s*,?`);
+  if (childPathRe.test(parentText)) {
+    return { merged: true, content };
+  }
+
+  const childrenIdx = parentText.indexOf("children");
+  const childBlock = routeBlock.replace(/^  /gm, "      ");
+
+  if (childrenIdx === -1) {
+    const parentClose = parentText.lastIndexOf("}");
+    if (parentClose <= 0) {
+      return { merged: false, content };
+    }
+    const parentBeforeClose = parentText.slice(0, parentClose);
+    const needsComma = !/,\s*$/.test(parentBeforeClose);
+    const separator = needsComma ? "," : "";
+    const withChildren =
+      parentBeforeClose +
+      `${separator}\n    children: [\n${childBlock}    ],\n` +
+      parentText.slice(parentClose);
+    const mergedContent =
+      content.slice(0, parentBounds.start) + withChildren + content.slice(parentBounds.end + 1);
+    return { merged: true, content: mergedContent };
+  }
+
+  const localBracketStart = parentText.indexOf("[", childrenIdx);
+  if (localBracketStart === -1) {
+    return { merged: false, content };
+  }
+  const localBracketEnd = findMatchingClose(parentText, localBracketStart, "[", "]");
+  if (localBracketEnd === -1) {
+    return { merged: false, content };
+  }
+
+  const absoluteBracketEnd = parentBounds.start + localBracketEnd;
+  const mergedContent = content.slice(0, absoluteBracketEnd) + childBlock + content.slice(absoluteBracketEnd);
+  return { merged: true, content: mergedContent };
 }
 
 function modelsTemplate(opts) {

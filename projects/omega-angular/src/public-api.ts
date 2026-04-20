@@ -37,3 +37,13 @@ export * from './lib/flows/omega-flow-manager';
 export * from './lib/agents/omega-agent-behavior';
 export * from './lib/agents/omega-agent';
 export * from './lib/bootstrap/provide-omega';
+
+// inspector (dev / diagnostics)
+export * from './lib/inspector/omega-flow-manager-instrumentation';
+export * from './lib/inspector/omega-inspector.types';
+export * from './lib/inspector/omega-inspector-global';
+export * from './lib/inspector/omega-inspector.service';
+export * from './lib/inspector/provide-omega-inspector';
+export * from './lib/inspector/omega-inspector-panel.component';
+export * from './lib/inspector/omega-inspector-floating.component';
+export * from './lib/inspector/provide-omega-inspector-floating-ui';
